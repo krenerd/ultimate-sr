@@ -17,7 +17,7 @@ network_D:
 
 # dataset setting
 train_dataset:
-    path: '/content/drive/MyDrive/data/div2k_hr/'
+    path: '/content/drive/MyDrive/data/div2k_hr/DIV2K_train_HR'
     num_samples: 32208
     using_bin: True
     using_flip: True
