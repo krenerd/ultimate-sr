@@ -55,7 +55,7 @@ def load_tfrecord_dataset(tfrecord_name, batch_size, gt_size,
                           scale, using_bin=False, using_flip=False,
                           using_rot=False, shuffle=True, buffer_size=10240):
     """load dataset from tfrecord"""
-    train_path = tf.data.Dataset.list_files(div8k_save_path+'*.png')
+    train_path = tf.data.Dataset.list_files(tfrecord_name+'/*.png')
 
     if shuffle:
         train_path = train_path.shuffle(buffer_size=buffer_size)
