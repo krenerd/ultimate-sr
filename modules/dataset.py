@@ -1,15 +1,18 @@
 import tensorflow as tf
 import numpy as np
+import cv2
+from modules.utils import imresize_np
+
 def read_img(path):
     image = tf.io.read_file(path)
     image = tf.image.decode_png(image)
     return image
 
-def _transform_images(gt_size, scale, using_flip, using_rot):
+def _transform_images(gt_size, scale, using_flip, using_rot, detect_blur):
     def transform_images(img):
         # randomly crop
         hr_img = tf.image.random_crop(img, (gt_size,gt_size,3))
-        lr_img = tf.image.resize(hr_img,(gt_size//scale, gt_size//scale), method = tf.image.ResizeMethod.BICUBIC)
+        lr_img = imresize_np(cropped, 1/scale)
         # randomly left-right flip
         if using_flip:
             flip_case = tf.random.uniform([1], 0, 2, dtype=tf.int32)
@@ -34,7 +37,12 @@ def _transform_images(gt_size, scale, using_flip, using_rot):
                  (tf.equal(rot_case, 1), rot180_func),
                  (tf.equal(rot_case, 2), rot270_func)],
                 default=lambda: (lr_img, hr_img))
-
+        # detect blurry
+        if detect_blur:
+            var=cv2.Laplacian(hr_img.numpy(), cv2.CV_32F).var()
+            if var < 100: #Blurry Image
+                return None 
+                
         # scale to [0, 1]
         lr_img = lr_img / 255
         hr_img = hr_img / 255
@@ -42,9 +50,10 @@ def _transform_images(gt_size, scale, using_flip, using_rot):
         return lr_img, hr_img
     return transform_images
 
-def generate_patches(im, buffer, patch_per_image, gt_size, scale, using_bin, using_flip, using_rot):
+def generate_patches(im, buffer, patch_per_image, gt_size, scale, using_bin, 
+                    using_flip, detect_blur, using_rot):
     for _ in range(patch_per_image):
-        res = _transform_images(gt_size, scale, using_flip, using_rot)(im)
+        res = _transform_images(gt_size, scale, using_flip, using_rot, detect_blur)(im)
         if not res is None:
             buffer.append(res)
 
@@ -64,15 +73,15 @@ def load_data_batch(buffer, image_iter, _generate_patches, batch_size, buffer_si
         del buffer[idx]
         
     return (np.array(lr_list), np.array(hr_list))
-def load_tfrecord_dataset(tfrecord_name, batch_size, gt_size,
-                          scale, using_bin=False, using_flip=False,
+def load_tfrecord_dataset(tfrecord_name, batch_size, gt_size, scale,
+                          using_bin=False, using_flip=False, detect_blur=True,
                           using_rot=False, shuffle=True, buffer_size=1024,
                           patch_per_image=128):
     """returns function for loading data"""
     buffer=[]
 
-    f_read_image=lambda im:generate_patches(im, buffer, patch_per_image,
-        gt_size, scale, using_bin, using_flip, using_rot)
+    f_read_image=lambda im:generate_patches(im, buffer, patch_per_image,gt_size, scale,
+        using_bin, using_flip, detect_blur, using_rot)
 
     train_path = tf.data.Dataset.list_files(tfrecord_name+'/*.png')
     read_image = train_path.map(read_img, num_parallel_calls=tf.data.AUTOTUNE)
