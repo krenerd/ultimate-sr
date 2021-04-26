@@ -1,7 +1,7 @@
 import tensorflow as tf
-
+import numpy as np
 def read_img(path):
-    image = tf.io.read_file(tfrecord)
+    image = tf.io.read_file(path)
     image = tf.image.decode_png(image)
     return image
 
@@ -42,7 +42,7 @@ def _transform_images(gt_size, scale, using_flip, using_rot):
         return lr_img, hr_img
     return transform_images
 
-def generate_patches(im, buffer, patch_per_image, scale, using_bin, using_flip, using_rot):
+def generate_patches(im, buffer, patch_per_image, gt_size, scale, using_bin, using_flip, using_rot):
     for _ in range(patch_per_image):
         res = _transform_images(gt_size, scale, using_flip, using_rot)(im)
         if not res is None:
