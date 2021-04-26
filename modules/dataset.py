@@ -12,7 +12,7 @@ def _transform_images(gt_size, scale, using_flip, using_rot, detect_blur):
     def transform_images(img):
         # randomly crop
         hr_img = tf.image.random_crop(img, (gt_size,gt_size,3))
-        lr_img = imresize_np(cropped, 1/scale)
+        lr_img = imresize_np(hr_img, 1/scale)
         # randomly left-right flip
         if using_flip:
             flip_case = tf.random.uniform([1], 0, 2, dtype=tf.int32)
