@@ -43,7 +43,7 @@ def main(_):
     pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
 
     # load checkpoint
-    checkpoint_dir = cfg['log_dir']
+    checkpoint_dir = cfg['log_dir'] + '/checkpoints'
     checkpoint = tf.train.Checkpoint(step=tf.Variable(0, name='step'),
                                      optimizer=optimizer,
                                      model=model)

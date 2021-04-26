@@ -53,7 +53,7 @@ def main(_):
     dis_loss_fn = DiscriminatorLoss(gan_type=cfg['gan_type'])
 
     # load checkpoint
-    checkpoint_dir = cfg['log_dir']
+    checkpoint_dir = cfg['log_dir'] + '/checkpoints/'
     checkpoint = tf.train.Checkpoint(step=tf.Variable(0, name='step'),
                                      optimizer_G=optimizer_G,
                                      optimizer_D=optimizer_D,
@@ -68,7 +68,7 @@ def main(_):
             manager.latest_checkpoint, checkpoint.step.numpy()))
     else:
         if cfg['pretrain_name'] is not None:
-            pretrain_dir = './checkpoints/' + cfg['pretrain_name']
+            pretrain_dir = cfg['pretrain_name'] + '/checkpoints/'
             if tf.train.latest_checkpoint(pretrain_dir):
                 checkpoint.restore(tf.train.latest_checkpoint(pretrain_dir))
                 checkpoint.step.assign(0)
