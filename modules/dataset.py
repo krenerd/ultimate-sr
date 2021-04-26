@@ -3,7 +3,7 @@ import tensorflow as tf
 
 def _parse_tfrecord(gt_size, scale, using_bin, using_flip, using_rot):
     def parse_tfrecord(tfrecord):
-        image = tf.io.read_file(path)
+        image = tf.io.read_file(tfrecord)
         image = tf.image.decode_png(image)
 
         lr_img, hr_img = _transform_images(

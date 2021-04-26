@@ -14,7 +14,7 @@ network_G:
 
 # dataset setting
 train_dataset:
-    path: './data/DIV2K800_sub_bin.tfrecord'
+    path: '/content/drive/MyDrive/data/div2k_hr/DIV2K_train_HR'
     num_samples: 32208
     using_bin: True
     using_flip: True
