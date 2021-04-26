@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import cv2
-from modules.utils import imresize_np
+from modules.resizing import imresize_np
 
 def read_img(path):
     image = tf.io.read_file(path)
