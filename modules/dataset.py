@@ -1,17 +1,9 @@
 import tensorflow as tf
 
-
-def _parse_tfrecord(gt_size, scale, using_bin, using_flip, using_rot):
-    def parse_tfrecord(tfrecord):
-        image = tf.io.read_file(tfrecord)
-        image = tf.image.decode_png(image)
-
-        lr_img, hr_img = _transform_images(
-            gt_size, scale, using_flip, using_rot)(image)
-
-        return lr_img, hr_img
-    return parse_tfrecord
-
+def read_img(path):
+    image = tf.io.read_file(tfrecord)
+    image = tf.image.decode_png(image)
+    return image
 
 def _transform_images(gt_size, scale, using_flip, using_rot):
     def transform_images(img):
@@ -50,19 +42,39 @@ def _transform_images(gt_size, scale, using_flip, using_rot):
         return lr_img, hr_img
     return transform_images
 
+def generate_patches(im, buffer, patch_per_image, scale, using_bin, using_flip, using_rot):
+    for _ in range(patch_per_image):
+        res = _transform_images(gt_size, scale, using_flip, using_rot)(im)
+        if not res is None:
+            buffer.append(res)
 
+def load_data_batch(buffer, image_iter, _generate_patches, batch_size, buffer_size):
+    lr_list, hr_list = [], []
+    # Fill the buffer until size >= `buffer_size`
+    while len(buffer) < buffer_size:
+        im = image_iter.get_next()
+        _generate_patches(im)
+    # Load batch_size patches from buffer
+    for _ in range(batch_size):
+        idx = np.random.randint(len(buffer))
+
+        lr_list.append(buffer[idx][0])
+        hr_list.append(buffer[idx][1])
+
+        del buffer[idx]
+        
+    return (np.array(lr_list), np.array(hr_list))
 def load_tfrecord_dataset(tfrecord_name, batch_size, gt_size,
                           scale, using_bin=False, using_flip=False,
-                          using_rot=False, shuffle=True, buffer_size=10240):
-    """load dataset from tfrecord"""
-    train_path = tf.data.Dataset.list_files(tfrecord_name+'/*.png')
+                          using_rot=False, shuffle=True, buffer_size=1024,
+                          patch_per_image=128):
+    """returns function for loading data"""
+    buffer=[]
 
-    if shuffle:
-        train_path = train_path.shuffle(buffer_size=buffer_size)
-    dataset = train_path.map(
-        _parse_tfrecord(gt_size, scale, using_bin, using_flip, using_rot),
-        num_parallel_calls=tf.data.AUTOTUNE)
-    dataset = dataset.batch(batch_size, drop_remainder=True)
-    dataset = dataset.prefetch(
-        buffer_size=tf.data.experimental.AUTOTUNE)
-    return dataset
+    f_read_image=lambda im:generate_patches(im, buffer, patch_per_image,
+        gt_size, scale, using_bin, using_flip, using_rot)
+
+    train_path = tf.data.Dataset.list_files(tfrecord_name+'/*.png')
+    read_image = train_path.map(read_img, num_parallel_calls=tf.data.AUTOTUNE)
+    image_iter = iter(read_image.repeat())
+    return lambda :load_data_batch(buffer, image_iter, f_read_image, batch_size, buffer_size)

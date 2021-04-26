@@ -79,7 +79,9 @@ def main(_):
     prog_bar = ProgressBar(cfg['niter'], checkpoint.step.numpy())
     remain_steps = max(cfg['niter'] - checkpoint.step.numpy(), 0)
 
-    for lr, hr in train_dataset.take(remain_steps):
+    for _ in range(remain_steps):
+        lr, hr = train_dataset()
+        
         checkpoint.step.assign_add(1)
         steps = checkpoint.step.numpy()
 

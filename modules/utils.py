@@ -46,7 +46,8 @@ def load_dataset(cfg, key, shuffle=True, buffer_size=10240):
         using_bin=dataset_cfg['using_bin'],
         using_flip=dataset_cfg['using_flip'],
         using_rot=dataset_cfg['using_rot'],
-        buffer_size=buffer_size)
+        buffer_size=dataset_cfg['buffer_size'],
+        patch_per_image=dataset_cfg['patch_per_image'])
     return dataset
 
 
