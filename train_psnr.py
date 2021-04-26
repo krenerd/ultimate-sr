@@ -43,7 +43,7 @@ def main(_):
     pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
 
     # load checkpoint
-    checkpoint_dir = './checkpoints/' + cfg['sub_name']
+    checkpoint_dir = cfg['log_dir']
     checkpoint = tf.train.Checkpoint(step=tf.Variable(0, name='step'),
                                      optimizer=optimizer,
                                      model=model)
@@ -74,14 +74,13 @@ def main(_):
         return total_loss, losses
 
     # training loop
-    summary_writer = tf.summary.create_file_writer(
-        './logs/' + cfg['sub_name'])
+    summary_writer = tf.summary.create_file_writer(cfg['log_dir']+'/logs')
     prog_bar = ProgressBar(cfg['niter'], checkpoint.step.numpy())
     remain_steps = max(cfg['niter'] - checkpoint.step.numpy(), 0)
 
     for _ in range(remain_steps):
         lr, hr = train_dataset()
-        
+
         checkpoint.step.assign_add(1)
         steps = checkpoint.step.numpy()
 
