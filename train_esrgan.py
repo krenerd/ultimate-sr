@@ -35,6 +35,8 @@ def main(_):
 
     # load dataset
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=False)
+    set5_dataset = load_dataset(cfg, 'set5')
+    set14_dataset = load_dataset(cfg, 'set14')
 
     # define optimizer
     learning_rate_G = MultiStepLR(cfg['lr_G'], cfg['lr_steps'], cfg['lr_rate'])

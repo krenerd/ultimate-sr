@@ -32,6 +32,8 @@ def main(_):
 
     # load dataset
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=True)
+    set5_dataset = load_dataset(cfg, 'set5')
+    set14_dataset = load_dataset(cfg, 'set14')
 
     # define optimizer
     learning_rate = MultiStepLR(cfg['lr'], cfg['lr_steps'], cfg['lr_rate'])
@@ -102,6 +104,7 @@ def main(_):
             manager.save()
             print("\n[*] save ckpt file at {}".format(
                 manager.latest_checkpoint))
+            
 
     print("\n[*] training done!")
 

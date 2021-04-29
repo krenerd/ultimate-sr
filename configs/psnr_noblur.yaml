@@ -4,7 +4,7 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-MSE'
+log_dir: '/content/drive/MyDrive/ESRGAN-MSE-noblur'
 pretrain_name: null
 
 # generator setting
@@ -19,7 +19,7 @@ train_dataset:
     using_bin: True
     using_flip: True
     using_rot: True
-    detect_blur: False
+    detect_blur: True
     buffer_size: 1024           # max size of buffer
     patch_per_image: 128        # number of patches to extract from each image
 

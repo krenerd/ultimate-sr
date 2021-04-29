@@ -3,6 +3,29 @@ import numpy as np
 import cv2
 from modules.resizing import imresize_np
 
+def load_val_dataset( data_path, scale=4 ):
+    # evaluate the model in various datasets for various methods
+    @tf.function()
+    def read_image(path):
+        # read image in graph-mode
+        image = tf.io.read_file(path)
+        image = tf.image.decode_jpeg(image)
+        return image / 255
+        
+    @tf.function()
+    def generate_val_data(image):
+        # Returns (LR, HR)
+        image=tf.dtypes.cast(image, tf.float32) / 255.0
+        image = tf.image.resize(image,((image.shape[0]//scale) * scale,(image.shape[1]//scale)*scale) ,
+                                method=tf.image.ResizeMethod.BICUBIC).numpy()
+        lr = imresize_np(image, 1/scale)
+        return lr,image * 2 - 1
+
+    path_list = tf.data.Dataset.list_files(data_path+'/*.png', shuffle=False)
+    dataset = path_list.map(read_image, num_parallel_calls=tf.data.AUTOTUNE)
+    dataset = dataset.map(generate_val_data, num_parallel_calls=tf.data.AUTOTUNE)
+    return dataset
+
 def read_img(path):
     image = tf.io.read_file(path)
     image = tf.image.decode_png(image)
