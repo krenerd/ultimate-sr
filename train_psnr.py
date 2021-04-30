@@ -6,7 +6,7 @@ import tensorflow as tf
 from modules.models import RRDB_Model
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import PixelLoss
-from modules.utils import (load_yaml, load_dataset, ProgressBar,
+from modules.utils import (load_yaml, load_dataset, load_val_dataset, ProgressBar,
                            set_memory_growth)
 
 
@@ -32,8 +32,8 @@ def main(_):
 
     # load dataset
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=True)
-    set5_dataset = load_dataset(cfg, 'set5')
-    set14_dataset = load_dataset(cfg, 'set14')
+    set5_dataset = load_val_dataset(cfg, 'set5')
+    set14_dataset = load_val_dataset(cfg, 'set14')
 
     # define optimizer
     learning_rate = MultiStepLR(cfg['lr'], cfg['lr_steps'], cfg['lr_rate'])
