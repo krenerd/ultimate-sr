@@ -18,14 +18,14 @@ def load_valid_dataset( data_path, scale=4 ):
         image = tf.image.resize(image,((image.shape[0]//scale) * scale,(image.shape[1]//scale)*scale) ,
                                 method=tf.image.ResizeMethod.BICUBIC).numpy()
         lr = imresize_np(image, 1/scale)
-        return lr,image * 2 - 1
+        return lr,image
 
     path_list = tf.data.Dataset.list_files(data_path+'/*.png', shuffle=False)
     dataset = path_list.map(read_image, num_parallel_calls=tf.data.AUTOTUNE)
     im_list=[]
     for image in dataset:
         im_list.append(generate_val_data(image))
-    return np.array(im_list)
+    return im_list
 
 def read_img(path):
     image = tf.io.read_file(path)

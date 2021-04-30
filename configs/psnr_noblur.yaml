@@ -42,6 +42,8 @@ pixel_criterion: l1
 save_steps: 5000
 
 # logging settings
-psnr: True
-lpips: True
-plot_samples: True
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True
