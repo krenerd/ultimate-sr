@@ -4,9 +4,12 @@ import lpips
 import torch
 import matplotlib.pyplot as plt
 def evaluate_lpips(sr, hr):
-    lpips_alex = lpips.LPIPS(net='alex')
+    global lpips_alexnet
+    if lpips_alexnet is None:
+        lpips_alex = lpips.LPIPS(net='alex')
     sr, hr=tf.expand_dims(tf.transpose(sr, [2, 0, 1]), axis=0), tf.expand_dims(tf.transpose(hr, [2, 0, 1]), axis=0)
-    return lpips_alex.forward(torch.Tensor(hr.numpy()), torch.Tensor(sr.numpy())) #Calculate LPIPS Similarity
+    res=lpips_alex.forward(torch.Tensor(hr.numpy()), torch.Tensor(sr.numpy())) #Calculate LPIPS Similarity
+    return res.detach().numpy().flatten()[0]
 
 def evaluate_psnr(sr, hr):
     def PSNR(y_true,y_pred, image_range = 1):
@@ -17,7 +20,9 @@ def evaluate_psnr(sr, hr):
         numerator = tf.math.log(x)
         denominator = tf.math.log(tf.constant(10, dtype=numerator.dtype))
         return numerator / denominator
-    return PSNR(hr, sr)
+    res=PSNR(hr, sr)
+    
+    return res.numpy()
 
 def evaluate_ssim(sr, hr):
     return tf.image.ssim(sr, hr, max_val=1, filter_size=11,
@@ -68,9 +73,9 @@ def evaluate_dataset(dataset, model, cfg):
     if cfg['logging']['psnr']:
         logs['psnr'] = sum_PSNR / num_data
     if cfg['logging']['ssim']:
-        logs['psnr'] = sum_SSIM / num_data
+        logs['ssim'] = sum_SSIM / num_data
     if cfg['logging']['lpips']:
-        logs['psnr'] = sum_LPIPS / num_data
+        logs['lpips'] = sum_LPIPS / num_data
     if cfg['logging']['plot_samples']:
         logs['samples'] = plot_examples(data_list)
 

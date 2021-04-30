@@ -123,8 +123,8 @@ def main(_):
                     tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
                 
                 if cfg['logging']['plot_samples']:
-                    tf.summary.image("set5/samples", set5_logs['smaples'], step=steps)
-                    tf.summary.image("set14/samples", set14_logs['smaples'], step=steps)
+                    tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
+                    tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
             
 
     print("\n[*] training done!")
