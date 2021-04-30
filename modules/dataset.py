@@ -14,7 +14,7 @@ def load_valid_dataset( data_path, scale=4 ):
         
     def generate_val_data(image):
         # Returns (LR, HR)
-        image=tf.dtypes.cast(image, tf.float32) / 255.0
+        image=tf.dtypes.cast(image, tf.float32)
         image = tf.image.resize(image,((image.shape[0]//scale) * scale,(image.shape[1]//scale)*scale) ,
                                 method=tf.image.ResizeMethod.BICUBIC).numpy()
         lr = imresize_np(image, 1/scale)

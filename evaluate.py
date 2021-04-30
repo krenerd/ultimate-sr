@@ -3,10 +3,10 @@ import numpy as np
 import lpips
 import torch
 import matplotlib.pyplot as plt
+
+lpips_alex = lpips.LPIPS(net='alex')
+
 def evaluate_lpips(sr, hr):
-    global lpips_alexnet
-    if lpips_alexnet is None:
-        lpips_alex = lpips.LPIPS(net='alex')
     sr, hr=tf.expand_dims(tf.transpose(sr, [2, 0, 1]), axis=0), tf.expand_dims(tf.transpose(hr, [2, 0, 1]), axis=0)
     res=lpips_alex.forward(torch.Tensor(hr.numpy()), torch.Tensor(sr.numpy())) #Calculate LPIPS Similarity
     return res.detach().numpy().flatten()[0]
