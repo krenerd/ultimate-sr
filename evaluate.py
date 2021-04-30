@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import lpips
 import torch
-
+import matplotlib.pyplot as plt
 def evaluate_lpips(sr, hr):
     lpips_alex = lpips.LPIPS(net='alex')
     sr, hr=tf.expand_dims(tf.transpose(sr, [2, 0, 1]), axis=0), tf.expand_dims(tf.transpose(hr, [2, 0, 1]), axis=0)
@@ -30,11 +30,11 @@ def plot_examples(data_list, plot_size=4):
 
     for idx,x in enumerate(data_list):
         plt.subplot(2, num_data, 1 + idx)
-        plt.imshow(np.clip(data_list[0],0,1))
+        plt.imshow(np.clip(x[0],0,1))
         plt.axis('off')
 
         plt.subplot(2, num_data, 1 + idx + num_data)
-        plt.imshow(data_list[1])
+        plt.imshow(x[1])
         plt.axis('off')
 
     fig.canvas.draw()

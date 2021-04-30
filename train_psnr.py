@@ -27,7 +27,7 @@ def main(_):
     cfg = load_yaml(FLAGS.cfg_path)
 
     # define network
-    model = RRDB_Model(cfg['input_size'], cfg['ch_size'], cfg['network_G'])
+    model = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
     model.summary(line_length=80)
 
     # load dataset
