@@ -12,7 +12,6 @@ def load_valid_dataset( data_path, scale=4 ):
         image = tf.image.decode_jpeg(image)
         return image / 255
         
-    @tf.function()
     def generate_val_data(image):
         # Returns (LR, HR)
         image=tf.dtypes.cast(image, tf.float32) / 255.0
@@ -23,8 +22,10 @@ def load_valid_dataset( data_path, scale=4 ):
 
     path_list = tf.data.Dataset.list_files(data_path+'/*.png', shuffle=False)
     dataset = path_list.map(read_image, num_parallel_calls=tf.data.AUTOTUNE)
-    dataset = dataset.map(generate_val_data, num_parallel_calls=tf.data.AUTOTUNE)
-    return dataset
+    im_list=[]
+    for image in dataset:
+        im_list.append(generate_val_data(image))
+    return np.array(im_list)
 
 def read_img(path):
     image = tf.io.read_file(path)
