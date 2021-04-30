@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from modules.resizing import imresize_np
 
-def load_val_dataset( data_path, scale=4 ):
+def load_valid_dataset( data_path, scale=4 ):
     # evaluate the model in various datasets for various methods
     @tf.function()
     def read_image(path):

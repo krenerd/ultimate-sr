@@ -5,7 +5,7 @@ import time
 import numpy as np
 import tensorflow as tf
 from absl import logging
-from modules.dataset import load_tfrecord_dataset, load_val_dataset
+from modules.dataset import load_tfrecord_dataset, load_valid_dataset
 
 
 def load_yaml(load_path):
@@ -36,7 +36,7 @@ def load_val_dataset(cfg, key):
     """load dataset"""
     data_path = cfg['test_dataset'][key]
     logging.info("load {} from {}".format(key, data_path))
-    dataset = load_val_dataset(data_path, cfg['scale'])
+    dataset = load_valid_dataset(data_path, cfg['scale'])
     return dataset
 
 def load_dataset(cfg, key, shuffle=True, buffer_size=10240):
