@@ -90,11 +90,13 @@ def main(_):
             hr_output = discriminator(hr, training=True)
             sr_output = discriminator(sr, training=True)
 
+            low_sr = tf.image.resize(sr,(lr.shape[0],lr.shape[1]))
+
             losses_G = {}
             losses_D = {}
             losses_G['reg'] = tf.reduce_sum(generator.losses)
             losses_D['reg'] = tf.reduce_sum(discriminator.losses)
-            losses_G['pixel'] = cfg['w_pixel'] * pixel_loss_fn(hr, sr)
+            losses_G['pixel'] = cfg['w_pixel'] * pixel_loss_fn(lr, low_sr)
             losses_G['feature'] = cfg['w_feature'] * fea_loss_fn(hr, sr)
             losses_G['gan'] = cfg['w_gan'] * gen_loss_fn(hr_output, sr_output)
             losses_D['gan'] = dis_loss_fn(hr_output, sr_output)
