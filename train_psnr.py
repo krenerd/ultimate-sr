@@ -42,8 +42,10 @@ def main(_):
                                          beta_2=cfg['adam_beta2_G'])
 
     # define losses function
-    pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
-
+    if cfg['cycle_mse']:
+        pixel_loss_fn = PixelLossDown(criterion=cfg['pixel_criterion'], scale=cfg['scale'])
+    else:
+        pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
     # load checkpoint
     checkpoint_dir = cfg['log_dir'] + '/checkpoints'
     checkpoint = tf.train.Checkpoint(step=tf.Variable(0, name='step'),
