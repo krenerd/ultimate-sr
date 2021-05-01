@@ -87,8 +87,8 @@ def main(_):
     def train_step(lr, hr):
         with tf.GradientTape(persistent=True) as tape:
             sr = generator(lr, training=True)
-            hr_output = discriminator(hr, training=True)
-            sr_output = discriminator(sr, training=True)
+            hr_output = discriminator([hr,lr], training=True)
+            sr_output = discriminator([sr,lr], training=True)
 
             low_sr = tf.image.resize(sr,(lr.shape[0],lr.shape[1]))
 

@@ -159,4 +159,4 @@ def DiscriminatorVGG128(size, channels, nf=64, wd=0.,
     x = dese_f(units=100, activation=lrelu_f(), name='linear1')(x)
     out = dese_f(units=1, name='linear2')(x)
 
-    return Model(inputs, out, name=name)
+    return Model([inputs,ref], out, name=name)
