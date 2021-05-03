@@ -30,7 +30,7 @@ def main(_):
     # define network
     generator = RRDB_Model(cfg['input_size'], cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
-    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'])
+    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], cfg['refGAN'])
     discriminator.summary(line_length=80)
 
     # load dataset
