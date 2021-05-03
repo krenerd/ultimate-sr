@@ -68,8 +68,8 @@ def main(_):
         checkpoint.restore(manager.latest_checkpoint)
         print('[*] load ckpt from {} at step {}.'.format(
             manager.latest_checkpoint, checkpoint.step.numpy()))
-    else:
-        if cfg['pretrain_name'] is not None:
+    else: # if checkpoint file doesn't exist
+        if cfg['pretrain_name'] is not None:    # load from pretrained model
             pretrain_dir = cfg['pretrain_name'] + '/checkpoints/'
             if tf.train.latest_checkpoint(pretrain_dir):
                 checkpoint.restore(tf.train.latest_checkpoint(pretrain_dir))

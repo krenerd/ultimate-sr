@@ -4,8 +4,8 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-sub_name: 'esrgan'
-pretrain_name: 'psnr_pretrain'
+log_dir: '/content/drive/MyDrive/ESRGAN-GAN'
+pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
 
 # generator setting
 network_G:
