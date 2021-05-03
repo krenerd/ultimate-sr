@@ -9,7 +9,7 @@ from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
                             GeneratorLoss, PixelLossDown)
 from modules.utils import (load_yaml, load_dataset, ProgressBar,
                            set_memory_growth)
-
+from evaluate import evaluate_dataset
 
 flags.DEFINE_string('cfg_path', './configs/esrgan.yaml', 'config file path')
 flags.DEFINE_string('gpu', '0', 'which gpu to use')
