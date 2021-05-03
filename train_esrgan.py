@@ -8,7 +8,7 @@ from modules.lr_scheduler import MultiStepLR
 from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
                             GeneratorLoss, PixelLossDown)
 from modules.utils import (load_yaml, load_dataset, ProgressBar,
-                           set_memory_growth)
+                           set_memory_growth, load_val_dataset)
 from evaluate import evaluate_dataset
 
 flags.DEFINE_string('cfg_path', './configs/esrgan.yaml', 'config file path')
@@ -35,8 +35,8 @@ def main(_):
 
     # load dataset
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=False)
-    set5_dataset = load_dataset(cfg, 'set5')
-    set14_dataset = load_dataset(cfg, 'set14')
+    set5_dataset = load_val_dataset(cfg, 'set5')
+    set14_dataset = load_val_dataset(cfg, 'set14')
 
     # define optimizer
     learning_rate_G = MultiStepLR(cfg['lr_G'], cfg['lr_steps'], cfg['lr_rate'])
@@ -72,8 +72,8 @@ def main(_):
         print('[*] load ckpt from {} at step {}.'.format(
             manager.latest_checkpoint, checkpoint.step.numpy()))
     else: # if checkpoint file doesn't exist
-        if cfg['pretrain_name'] is not None:    # load from pretrained model
-            pretrain_dir = cfg['pretrain_name'] + '/checkpoints/'
+        if cfg['pretrain_dir'] is not None:    # load from pretrained model
+            pretrain_dir = cfg['pretrain_dir'] + '/checkpoints/'
             if tf.train.latest_checkpoint(pretrain_dir):
                 checkpoint.restore(tf.train.latest_checkpoint(pretrain_dir))
                 checkpoint.step.assign(0)
