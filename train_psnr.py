@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from modules.models import RRDB_Model
 from modules.lr_scheduler import MultiStepLR
-from modules.losses import PixelLoss
+from modules.losses import PixelLoss, PixelLossDown
 from modules.utils import (load_yaml, load_dataset, load_val_dataset, ProgressBar,
                            set_memory_growth)
 from evaluate import evaluate_dataset

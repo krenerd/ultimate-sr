@@ -6,7 +6,7 @@ ch_size: 3
 scale: 4
 log_dir: '/content/drive/MyDrive/ESRGAN-MSE-noblur'
 pretrain_name: null
-
+cycle_mse: False
 # generator setting
 network_G:
     nf: 64
