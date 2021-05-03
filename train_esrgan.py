@@ -6,7 +6,7 @@ import tensorflow as tf
 from modules.models import RRDB_Model, DiscriminatorVGG128
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
-                            GeneratorLoss)
+                            GeneratorLoss, PixelLossDown)
 from modules.utils import (load_yaml, load_dataset, ProgressBar,
                            set_memory_growth)
 
@@ -49,7 +49,10 @@ def main(_):
                                            beta_2=cfg['adam_beta2_D'])
 
     # define losses function
-    pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
+    if cfg['cycle_mse']:
+        pixel_loss_fn = PixelLossDown(criterion=cfg['pixel_criterion'], scale=cfg['scale'])
+    else:
+        pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
     fea_loss_fn = ContentLoss(criterion=cfg['feature_criterion'])
     gen_loss_fn = GeneratorLoss(gan_type=cfg['gan_type'])
     dis_loss_fn = DiscriminatorLoss(gan_type=cfg['gan_type'])

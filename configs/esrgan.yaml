@@ -6,6 +6,7 @@ ch_size: 3
 scale: 4
 log_dir: '/content/drive/MyDrive/ESRGAN-GAN'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
+cycle_mse: False
 
 # generator setting
 network_G:

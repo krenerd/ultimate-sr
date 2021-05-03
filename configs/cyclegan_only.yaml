@@ -4,9 +4,9 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-refGAN'
+log_dir: '/content/drive/MyDrive/ESRGAN-GAN'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
-cycle_mse: False
+cycle_mse: True
 # generator setting
 network_G:
     nf: 64
@@ -42,11 +42,11 @@ adam_beta2_D: 0.99
 w_pixel: !!float 1e-2
 pixel_criterion: l1
 
-w_feature: 1.0
+w_feature: 0 # don't use vgg loss
 feature_criterion: l1
 
 w_gan: !!float 5e-3
 gan_type: ragan  # gan | ragan
-refgan: True       # provide reference image
+refgan: False       # provide reference image
 
 save_steps: 5000
