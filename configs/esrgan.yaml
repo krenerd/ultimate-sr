@@ -23,6 +23,9 @@ train_dataset:
     using_bin: True
     using_flip: True
     using_rot: True
+    detect_blur: False
+    buffer_size: 1024           # max size of buffer
+    patch_per_image: 128        # number of patches to extract from each image
 test_dataset:
     set5_path: './data/Set5'
     set14_path: './data/Set14'
@@ -51,3 +54,10 @@ gan_type: ragan  # gan | ragan
 refgan: False       # provide reference image
 
 save_steps: 5000
+
+# logging settings
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True
