@@ -158,6 +158,27 @@ def main(_):
             print("\n[*] save ckpt file at {}".format(
                 manager.latest_checkpoint))
 
+            # log results on test data
+            set5_logs = evaluate_dataset(set5_dataset, model, cfg)
+            set14_logs = evaluate_dataset(set14_dataset, model, cfg)
+
+            with summary_writer.as_default():
+                if cfg['logging']['psnr']:
+                    tf.summary.scalar('set5/psnr', set5_logs['psnr'], step=steps)
+                    tf.summary.scalar('set14/psnr', set14_logs['psnr'], step=steps)
+
+                if cfg['logging']['ssim']:
+                    tf.summary.scalar('set5/ssim', set5_logs['ssim'], step=steps)
+                    tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
+
+                if cfg['logging']['lpips']:
+                    tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
+                    tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
+                
+                if cfg['logging']['plot_samples']:
+                    tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
+                    tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
+
     print("\n [*] training done!")
 
 
