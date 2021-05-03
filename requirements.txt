@@ -1,6 +1,8 @@
-tensorflow-gpu
+#tensorflow-gpu==2.4.1
 numpy
 opencv-python
+lpips
+#torch==1.8.1
 PyYAML
 tqdm
 Pillow

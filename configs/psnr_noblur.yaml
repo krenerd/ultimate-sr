@@ -6,7 +6,7 @@ ch_size: 3
 scale: 4
 log_dir: '/content/drive/MyDrive/ESRGAN-MSE-noblur'
 pretrain_name: null
-
+cycle_mse: False
 # generator setting
 network_G:
     nf: 64
@@ -24,8 +24,8 @@ train_dataset:
     patch_per_image: 128        # number of patches to extract from each image
 
 test_dataset:
-    set5: '/content/drive/MyDrive/data/Set5'
-    set14: '/content/drive/MyDrive/data/Set14'
+    set5: './test data/Set5'
+    set14: './test data/Set14'
 
 # training setting
 niter: 500000
@@ -42,6 +42,8 @@ pixel_criterion: l1
 save_steps: 5000
 
 # logging settings
-psnr: True
-lpips: True
-plot_samples: True
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True

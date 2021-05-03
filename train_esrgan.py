@@ -6,10 +6,10 @@ import tensorflow as tf
 from modules.models import RRDB_Model, DiscriminatorVGG128
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
-                            GeneratorLoss)
+                            GeneratorLoss, PixelLossDown)
 from modules.utils import (load_yaml, load_dataset, ProgressBar,
-                           set_memory_growth)
-
+                           set_memory_growth, load_val_dataset)
+from evaluate import evaluate_dataset
 
 flags.DEFINE_string('cfg_path', './configs/esrgan.yaml', 'config file path')
 flags.DEFINE_string('gpu', '0', 'which gpu to use')
@@ -30,13 +30,13 @@ def main(_):
     # define network
     generator = RRDB_Model(cfg['input_size'], cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
-    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], cfg['refGAN'])
+    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], refgan=cfg['refgan'])
     discriminator.summary(line_length=80)
 
     # load dataset
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=False)
-    set5_dataset = load_dataset(cfg, 'set5')
-    set14_dataset = load_dataset(cfg, 'set14')
+    set5_dataset = load_val_dataset(cfg, 'set5')
+    set14_dataset = load_val_dataset(cfg, 'set14')
 
     # define optimizer
     learning_rate_G = MultiStepLR(cfg['lr_G'], cfg['lr_steps'], cfg['lr_rate'])
@@ -49,7 +49,10 @@ def main(_):
                                            beta_2=cfg['adam_beta2_D'])
 
     # define losses function
-    pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
+    if cfg['cycle_mse']:
+        pixel_loss_fn = PixelLossDown(criterion=cfg['pixel_criterion'], scale=cfg['scale'])
+    else:
+        pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
     fea_loss_fn = ContentLoss(criterion=cfg['feature_criterion'])
     gen_loss_fn = GeneratorLoss(gan_type=cfg['gan_type'])
     dis_loss_fn = DiscriminatorLoss(gan_type=cfg['gan_type'])
@@ -68,9 +71,9 @@ def main(_):
         checkpoint.restore(manager.latest_checkpoint)
         print('[*] load ckpt from {} at step {}.'.format(
             manager.latest_checkpoint, checkpoint.step.numpy()))
-    else:
-        if cfg['pretrain_name'] is not None:
-            pretrain_dir = cfg['pretrain_name'] + '/checkpoints/'
+    else: # if checkpoint file doesn't exist
+        if cfg['pretrain_dir'] is not None:    # load from pretrained model
+            pretrain_dir = cfg['pretrain_dir'] + '/checkpoints/'
             if tf.train.latest_checkpoint(pretrain_dir):
                 checkpoint.restore(tf.train.latest_checkpoint(pretrain_dir))
                 checkpoint.step.assign(0)
@@ -87,8 +90,12 @@ def main(_):
     def train_step(lr, hr):
         with tf.GradientTape(persistent=True) as tape:
             sr = generator(lr, training=True)
-            hr_output = discriminator([hr,lr], training=True)
-            sr_output = discriminator([sr,lr], training=True)
+            if cfg['refgan']:
+                hr=[hr, lr]
+                sr=[sr, lr]
+                
+            hr_output = discriminator(hr, training=True)
+            sr_output = discriminator(sr, training=True)
 
             losses_G = {}
             losses_D = {}
@@ -150,6 +157,27 @@ def main(_):
             manager.save()
             print("\n[*] save ckpt file at {}".format(
                 manager.latest_checkpoint))
+
+            # log results on test data
+            set5_logs = evaluate_dataset(set5_dataset, model, cfg)
+            set14_logs = evaluate_dataset(set14_dataset, model, cfg)
+
+            with summary_writer.as_default():
+                if cfg['logging']['psnr']:
+                    tf.summary.scalar('set5/psnr', set5_logs['psnr'], step=steps)
+                    tf.summary.scalar('set14/psnr', set14_logs['psnr'], step=steps)
+
+                if cfg['logging']['ssim']:
+                    tf.summary.scalar('set5/ssim', set5_logs['ssim'], step=steps)
+                    tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
+
+                if cfg['logging']['lpips']:
+                    tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
+                    tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
+                
+                if cfg['logging']['plot_samples']:
+                    tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
+                    tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
 
     print("\n [*] training done!")
 

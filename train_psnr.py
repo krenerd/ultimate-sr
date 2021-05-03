@@ -5,10 +5,10 @@ import tensorflow as tf
 
 from modules.models import RRDB_Model
 from modules.lr_scheduler import MultiStepLR
-from modules.losses import PixelLoss
+from modules.losses import PixelLoss, PixelLossDown
 from modules.utils import (load_yaml, load_dataset, load_val_dataset, ProgressBar,
                            set_memory_growth)
-
+from evaluate import evaluate_dataset
 
 flags.DEFINE_string('cfg_path', './configs/psnr.yaml', 'config file path')
 flags.DEFINE_string('gpu', '0', 'which gpu to use')
@@ -27,7 +27,7 @@ def main(_):
     cfg = load_yaml(FLAGS.cfg_path)
 
     # define network
-    model = RRDB_Model(cfg['input_size'], cfg['ch_size'], cfg['network_G'])
+    model = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
     model.summary(line_length=80)
 
     # load dataset
@@ -42,8 +42,10 @@ def main(_):
                                          beta_2=cfg['adam_beta2_G'])
 
     # define losses function
-    pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
-
+    if cfg['cycle_mse']:
+        pixel_loss_fn = PixelLossDown(criterion=cfg['pixel_criterion'], scale=cfg['scale'])
+    else:
+        pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
     # load checkpoint
     checkpoint_dir = cfg['log_dir'] + '/checkpoints'
     checkpoint = tf.train.Checkpoint(step=tf.Variable(0, name='step'),
@@ -104,6 +106,27 @@ def main(_):
             manager.save()
             print("\n[*] save ckpt file at {}".format(
                 manager.latest_checkpoint))
+
+            # log results on test data
+            set5_logs = evaluate_dataset(set5_dataset, model, cfg)
+            set14_logs = evaluate_dataset(set14_dataset, model, cfg)
+
+            with summary_writer.as_default():
+                if cfg['logging']['psnr']:
+                    tf.summary.scalar('set5/psnr', set5_logs['psnr'], step=steps)
+                    tf.summary.scalar('set14/psnr', set14_logs['psnr'], step=steps)
+
+                if cfg['logging']['ssim']:
+                    tf.summary.scalar('set5/ssim', set5_logs['ssim'], step=steps)
+                    tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
+
+                if cfg['logging']['lpips']:
+                    tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
+                    tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
+                
+                if cfg['logging']['plot_samples']:
+                    tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
+                    tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
             
 
     print("\n[*] training done!")

@@ -1,7 +1,18 @@
 import tensorflow as tf
 from tensorflow.keras.applications.vgg19 import preprocess_input, VGG19
+from modules.resizing import imresize_np
 
-
+def PixelLossDown(criterion='l1', scale=4):
+    """pixel loss"""
+    def _PixelLossDown(sr, hr):
+        sr_down = imresize_np(sr, 1 / scale)
+        hr_down = imresize_np(hr, 1 / scale)
+        if criterion == 'l1':
+            return tf.keras.losses.mean_absolute_error(sr_down, hr_down)
+        elif criterion == 'l2':
+            return tf.keras.losses.mean_squared_error(sr_down, hr_down)
+    return _PixelLossDown
+    
 def PixelLoss(criterion='l1'):
     """pixel loss"""
     if criterion == 'l1':

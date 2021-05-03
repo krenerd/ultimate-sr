@@ -111,8 +111,8 @@ def RRDB_Model(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
     return Model(inputs, out, name=name)
 
 
-def DiscriminatorVGG128(size, channels, cfg_ref, nf=64, wd=0.,
-                        name='Discriminator_VGG_128'):
+def DiscriminatorVGG128(size, channels, nf=64, wd=0.,
+                        name='Discriminator_VGG_128', refgan=False):
     """Discriminator VGG 128"""
     lrelu_f = functools.partial(LeakyReLU, alpha=0.2)
     conv_k3s1_f = functools.partial(Conv2D,
@@ -126,11 +126,12 @@ def DiscriminatorVGG128(size, channels, cfg_ref, nf=64, wd=0.,
     dese_f = functools.partial(Dense, kernel_regularizer=_regularizer(wd))
 
     x = inputs = Input(shape=(size, size, channels))
-    ref = Input(shape=(None,None,channels))
-    
-    if cfg_ref:
+
+    if refgan:
+        ref = Input(shape=(None,None,channels))
         ref = tf.image.resize(ref,(size,size))
-        x = tf.concat([x,ref])
+
+        x = tf.keras.layers.concatenate([x, ref])
 
     x = conv_k3s1_f(filters=nf, name='conv0_0')(x)
     x = conv_k4s2_f(filters=nf, use_bias=False, name='conv0_1')(x)
@@ -159,5 +160,7 @@ def DiscriminatorVGG128(size, channels, cfg_ref, nf=64, wd=0.,
     x = Flatten()(x)
     x = dese_f(units=100, activation=lrelu_f(), name='linear1')(x)
     out = dese_f(units=1, name='linear2')(x)
-
-    return Model([inputs,ref], out, name=name)
+    if refgan:
+        return Model([inputs,ref], out, name=name)
+    else:
+        return Model(inputs, out, name=name)
