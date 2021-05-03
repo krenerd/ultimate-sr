@@ -27,8 +27,8 @@ train_dataset:
     buffer_size: 1024           # max size of buffer
     patch_per_image: 128        # number of patches to extract from each image
 test_dataset:
-    set5_path: './data/Set5'
-    set14_path: './data/Set14'
+    set5: './test data/Set5'
+    set14: './test data/Set14'
 
 # training setting
 niter: 400000
