@@ -12,6 +12,7 @@ network_G:
     nf: 64
     nb: 23
 # discriminator setting
+refGAN: False
 network_D:
     nf: 64
 
