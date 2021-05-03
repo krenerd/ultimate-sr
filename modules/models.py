@@ -131,7 +131,7 @@ def DiscriminatorVGG128(size, channels, nf=64, wd=0.,
         ref = Input(shape=(None,None,channels))
         ref = tf.image.resize(ref,(size,size))
 
-        x = tf.concat([x,ref])
+        x = tf.keras.layers.concatenate([x, ref])
 
     x = conv_k3s1_f(filters=nf, name='conv0_0')(x)
     x = conv_k4s2_f(filters=nf, use_bias=False, name='conv0_1')(x)
