@@ -2,7 +2,7 @@ import functools
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Dense, Flatten, Input, Conv2D, LeakyReLU
-
+from modules.resizing import imresize_np
 
 def _regularizer(weights_decay=5e-4):
     return tf.keras.regularizers.l2(weights_decay)
@@ -111,7 +111,7 @@ def RRDB_Model(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
     return Model(inputs, out, name=name)
 
 
-def DiscriminatorVGG128(size, channels, nf=64, wd=0.,
+def DiscriminatorVGG128(size, channels, nf=64, wd=0., scale=4,
                         name='Discriminator_VGG_128', refgan=False):
     """Discriminator VGG 128"""
     lrelu_f = functools.partial(LeakyReLU, alpha=0.2)
@@ -129,6 +129,7 @@ def DiscriminatorVGG128(size, channels, nf=64, wd=0.,
 
     if refgan:
         ref = Input(shape=(size,size,channels))
+        ref_up = imresize_np(ref, 1/scale)
         x = tf.keras.layers.concatenate([x, ref])
 
     x = conv_k3s1_f(filters=nf, name='conv0_0')(x)

@@ -30,7 +30,7 @@ def main(_):
     # define network
     generator = RRDB_Model(cfg['input_size'], cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
-    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], refgan=cfg['refgan'])
+    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
     discriminator.summary(line_length=80)
 
     # load dataset
@@ -91,6 +91,7 @@ def main(_):
         with tf.GradientTape(persistent=True) as tape:
             sr = generator(lr, training=True)
             if cfg['refgan']:
+                
                 hr=[hr, lr]
                 sr=[sr, lr]
                 
