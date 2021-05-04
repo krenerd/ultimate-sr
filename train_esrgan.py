@@ -159,8 +159,8 @@ def main(_):
                 manager.latest_checkpoint))
 
             # log results on test data
-            set5_logs = evaluate_dataset(set5_dataset, model, cfg)
-            set14_logs = evaluate_dataset(set14_dataset, model, cfg)
+            set5_logs = evaluate_dataset(set5_dataset, generator, cfg)
+            set14_logs = evaluate_dataset(set14_dataset, generator, cfg)
 
             with summary_writer.as_default():
                 if cfg['logging']['psnr']:
