@@ -9,7 +9,10 @@ def imresize_np(img, scale, antialiasing=True):
     # output: HWC RBG [0,1] w/o round
     # (Modified from
     #  https://github.com/open-mmlab/mmsr/blob/master/codes/data/util.py)
+    if len(img.shape) == 3:
     in_H, in_W, in_C = img.shape
+    elif len(img.shape) == 4:
+    _, in_H, in_W, in_C = img.shape
 
     _, out_H, out_W = in_C, np.ceil(in_H * scale), np.ceil(in_W * scale)
     out_H, out_W = out_H.astype(np.int64), out_W.astype(np.int64)
