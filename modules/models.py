@@ -89,7 +89,7 @@ class ResInResDenseBlock(tf.keras.layers.Layer):
         out = self.rdb_2(out)
         out = self.rdb_3(out)
         out = out * self.res_beta + x
-        if apply_noise:
+        if self.apply_noise:
             out = self.applynoise(out)
         return out
 
