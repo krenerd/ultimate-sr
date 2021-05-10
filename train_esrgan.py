@@ -51,7 +51,7 @@ def main(_):
     # define losses function
     if cfg['cycle_mse']:
         pixel_loss_fn = PixelLossDown(criterion=cfg['pixel_criterion'], 
-                                    scale=(cfg['gt_size']//cfg['scale'], cfg['gt_size']//cfg['scale']))
+                                    lr_size=(cfg['gt_size']//cfg['scale'], cfg['gt_size']//cfg['scale']))
     else:
         pixel_loss_fn = PixelLoss(criterion=cfg['pixel_criterion'])
     fea_loss_fn = ContentLoss(criterion=cfg['feature_criterion'])
