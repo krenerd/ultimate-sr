@@ -3,6 +3,11 @@
 #    https://github.com/open-mmlab/mmsr                                       #
 ###############################################################################
 import numpy as np
+
+def resize_batch(imgs, scale, antialiasing=True):
+    _imresize_np = lambda im: imresize_np(im, scale, antialiasing)
+    return tf.map_fn(_imresize_np, imgs)
+
 def imresize_np(img, scale, antialiasing=True):
     # Now the scale should be the same for H and W
     # input: img: Numpy, HWC RBG [0,1]

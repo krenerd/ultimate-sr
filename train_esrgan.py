@@ -28,9 +28,9 @@ def main(_):
     cfg = load_yaml(FLAGS.cfg_path)
 
     # define network
-    generator = RRDB_Model(cfg['input_size'], cfg['ch_size'], cfg['network_G'])
+    generator = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
-    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], refgan=cfg['refgan'])
+    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
     discriminator.summary(line_length=80)
 
     # load dataset
@@ -91,11 +91,11 @@ def main(_):
         with tf.GradientTape(persistent=True) as tape:
             sr = generator(lr, training=True)
             if cfg['refgan']:
-                hr=[hr, lr]
-                sr=[sr, lr]
-                
-            hr_output = discriminator(hr, training=True)
-            sr_output = discriminator(sr, training=True)
+                hr_output = discriminator([hr, lr], training=True)
+                sr_output = discriminator([sr, lr], training=True)
+            else: 
+                hr_output = discriminator(hr, training=True)
+                sr_output = discriminator(sr, training=True)
 
             losses_G = {}
             losses_D = {}
@@ -159,8 +159,8 @@ def main(_):
                 manager.latest_checkpoint))
 
             # log results on test data
-            set5_logs = evaluate_dataset(set5_dataset, model, cfg)
-            set14_logs = evaluate_dataset(set14_dataset, model, cfg)
+            set5_logs = evaluate_dataset(set5_dataset, generator, cfg)
+            set14_logs = evaluate_dataset(set14_dataset, generator, cfg)
 
             with summary_writer.as_default():
                 if cfg['logging']['psnr']:
