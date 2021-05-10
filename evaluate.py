@@ -3,7 +3,7 @@ import numpy as np
 import lpips
 import torch
 import matplotlib.pyplot as plt
-
+from modules.utils import plot_to_image
 lpips_alex = lpips.LPIPS(net='alex')
 
 def evaluate_lpips(sr, hr):
@@ -30,6 +30,7 @@ def evaluate_ssim(sr, hr):
 
 def plot_examples(data_list, plot_size=4):
     # returns a image with all (SR, HR) pair visualized
+    plt.close()
     num_data = len(data_list)
     fig=plt.figure(figsize=(plot_size * num_data, plot_size * 2))
 
@@ -42,13 +43,7 @@ def plot_examples(data_list, plot_size=4):
         plt.imshow(x[1])
         plt.axis('off')
 
-    fig.canvas.draw()
-
-    image_from_plot = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-    image_from_plot = image_from_plot.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-    plt.close()
-
-    return image_from_plot
+    return plot_to_image(fig)
 
 def evaluate_dataset(dataset, model, cfg):
     # evalutaes ever
