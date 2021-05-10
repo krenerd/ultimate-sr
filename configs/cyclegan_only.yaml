@@ -48,6 +48,6 @@ feature_criterion: l1
 
 w_gan: !!float 5e-3
 gan_type: ragan  # gan | ragan
-refgan: False       # provide reference image
+refgan: True       # provide reference image
 
 save_steps: 5000

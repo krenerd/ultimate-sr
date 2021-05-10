@@ -4,9 +4,10 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-GAN'
+log_dir: '/content/drive/MyDrive/ESRGAN-cyclemixing'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
 cycle_mse: True
+
 # generator setting
 network_G:
     nf: 64
@@ -51,6 +52,13 @@ feature_criterion: l1
 
 w_gan: !!float 5e-3
 gan_type: ragan  # gan | ragan
-refgan: False       # provide reference image
+refgan: True       # provide reference image
 
 save_steps: 5000
+
+# logging settings
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True
