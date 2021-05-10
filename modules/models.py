@@ -59,7 +59,7 @@ class ResDenseBlock_5C(tf.keras.layers.Layer):
         return x5 * self.res_beta + x
 
 
-class ApplyNoise(tf.keras.layers,Layer):
+class ApplyNoise(tf.keras.layers.Layer):
   def __init__(self):
     super(ApplyNoise, self).__init__()
 
