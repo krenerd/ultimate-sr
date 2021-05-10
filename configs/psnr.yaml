@@ -11,7 +11,7 @@ cycle_mse: False
 network_G:
     nf: 64
     nb: 23
-    apply_noise: True
+    apply_noise: False
 
 # dataset setting
 train_dataset:
