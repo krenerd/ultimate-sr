@@ -4,9 +4,10 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-GAN'
+log_dir: '/content/drive/MyDrive/ESRGAN-cyclemixing'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
 cycle_mse: True
+
 # generator setting
 network_G:
     nf: 64
@@ -22,9 +23,12 @@ train_dataset:
     using_bin: True
     using_flip: True
     using_rot: True
+    detect_blur: False
+    buffer_size: 1024           # max size of buffer
+    patch_per_image: 128        # number of patches to extract from each image
 test_dataset:
-    set5_path: './data/Set5'
-    set14_path: './data/Set14'
+    set5: './test data/Set5'
+    set14: './test data/Set14'
 
 # training setting
 niter: 400000
@@ -47,6 +51,13 @@ feature_criterion: l1
 
 w_gan: !!float 5e-3
 gan_type: ragan  # gan | ragan
-refgan: False       # provide reference image
+refgan: True       # provide reference image
 
 save_steps: 5000
+
+# logging settings
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True
