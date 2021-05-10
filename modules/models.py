@@ -74,9 +74,10 @@ class ApplyNoise(tf.keras.layers,Layer):
 
 class ResInResDenseBlock(tf.keras.layers.Layer):
     """Residual in Residual Dense Block"""
-    def __init__(self, applynoise, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
+    def __init__(self, apply_noise, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
                  **kwargs):
         super(ResInResDenseBlock, self).__init__(name=name, **kwargs)
+        self.apply_noise = apply_noise
         self.res_beta = res_beta
         self.rdb_1 = ResDenseBlock_5C(nf, gc, res_beta=res_beta, wd=wd)
         self.rdb_2 = ResDenseBlock_5C(nf, gc, res_beta=res_beta, wd=wd)
@@ -88,17 +89,16 @@ class ResInResDenseBlock(tf.keras.layers.Layer):
         out = self.rdb_2(out)
         out = self.rdb_3(out)
         out = out * self.res_beta + x
-        if applynoise:
+        if apply_noise:
             out = self.applynoise(out)
         return out
 
 
 def RRDB_Model(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
     """Residual-in-Residual Dense Block based Model """
-    nf, nb, applynoise = cfg_net['nf'], cfg_net['nb'], cfg_net['apply_noise']
+    nf, nb, apply_noise = cfg_net['nf'], cfg_net['nb'], cfg_net['apply_noise']
     lrelu_f = functools.partial(LeakyReLU, alpha=0.2)
-    rrdb_f = functools.partial(ResInResDenseBlock, applynoise=applynoise, nf=nf, gc=gc, wd=wd)
-    applynoise_f = functools.partial(ApplyNoise)
+    rrdb_f = functools.partial(ResInResDenseBlock, apply_noise=apply_noise, nf=nf, gc=gc, wd=wd)
     conv_f = functools.partial(Conv2D, kernel_size=3, padding='same',
                                bias_initializer='zeros',
                                kernel_initializer=_kernel_init(),
