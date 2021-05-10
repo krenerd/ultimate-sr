@@ -2,15 +2,16 @@ import tensorflow as tf
 from tensorflow.keras.applications.vgg19 import preprocess_input, VGG19
 from modules.resizing import resize_batch
 
-def PixelLossDown(criterion='l1', scale=4):
+def PixelLossDown(criterion='l1', lr_size=(24, 24)):
     """pixel loss"""
+    downsize=tf.keras.layers.experimental.preprocessing.Resizing(lr_size[0], lr_size[1], interpolation='bilinear')
     def _PixelLossDown(sr, hr):
-        sr_down = resize_batch(sr, 1 / scale)
-        hr_down = resize_batch(hr, 1 / scale)
+        sr_down = downsize(sr)
+        hr_down = downsize(sr)
         if criterion == 'l1':
-            return tf.keras.losses.mean_absolute_error(sr_down, hr_down)
+            return tf.keras.losses.MeanAbsoluteError()(sr_down, hr_down)
         elif criterion == 'l2':
-            return tf.keras.losses.mean_squared_error(sr_down, hr_down)
+            return tf.keras.losses.MeanSquaredError()(sr_down, hr_down)
     return _PixelLossDown
     
 def PixelLoss(criterion='l1'):

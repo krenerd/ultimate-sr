@@ -3,7 +3,7 @@
 #    https://github.com/open-mmlab/mmsr                                       #
 ###############################################################################
 import numpy as np
-
+import tensorflow as tf
 def resize_batch(imgs, scale, antialiasing=True):
     _imresize_np = lambda im: imresize_np(im, scale, antialiasing)
     return tf.map_fn(_imresize_np, imgs)
