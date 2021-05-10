@@ -74,7 +74,7 @@ class ApplyNoise(tf.keras.layers.Layer):
 
 class ResInResDenseBlock(tf.keras.layers.Layer):
     """Residual in Residual Dense Block"""
-    def __init__(self, apply_noise, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
+    def __init__(self, apply_noise=True, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
                  **kwargs):
         super(ResInResDenseBlock, self).__init__(name=name, **kwargs)
         self.apply_noise = apply_noise
