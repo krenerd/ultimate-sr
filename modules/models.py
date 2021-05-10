@@ -59,28 +59,46 @@ class ResDenseBlock_5C(tf.keras.layers.Layer):
         return x5 * self.res_beta + x
 
 
+class ApplyNoise(tf.keras.layers,Layer):
+  def __init__(self):
+    super(ApplyNoise, self).__init__()
+
+  def build(self, input_shape):
+    self.channels = input_shape[-1]
+    self.channel_wise = self.add_weight("kernel", shape=(self.channels,), trainable=True)
+
+  def call(self, x):
+    noise = tf.random.normal(tf.shape(x), dtype=x.dtype)
+    return x + noise * self.channel_wise
+
+
 class ResInResDenseBlock(tf.keras.layers.Layer):
     """Residual in Residual Dense Block"""
-    def __init__(self, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
+    def __init__(self, applynoise, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
                  **kwargs):
         super(ResInResDenseBlock, self).__init__(name=name, **kwargs)
         self.res_beta = res_beta
         self.rdb_1 = ResDenseBlock_5C(nf, gc, res_beta=res_beta, wd=wd)
         self.rdb_2 = ResDenseBlock_5C(nf, gc, res_beta=res_beta, wd=wd)
         self.rdb_3 = ResDenseBlock_5C(nf, gc, res_beta=res_beta, wd=wd)
+        self.applynoise = ApplyNoise()
 
     def call(self, x):
         out = self.rdb_1(x)
         out = self.rdb_2(out)
         out = self.rdb_3(out)
-        return out * self.res_beta + x
+        out = out * self.res_beta + x
+        if applynoise:
+            out = self.applynoise(out)
+        return out
 
 
 def RRDB_Model(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
     """Residual-in-Residual Dense Block based Model """
-    nf, nb = cfg_net['nf'], cfg_net['nb']
+    nf, nb, applynoise = cfg_net['nf'], cfg_net['nb'], cfg_net['apply_noise']
     lrelu_f = functools.partial(LeakyReLU, alpha=0.2)
-    rrdb_f = functools.partial(ResInResDenseBlock, nf=nf, gc=gc, wd=wd)
+    rrdb_f = functools.partial(ResInResDenseBlock, applynoise=applynoise, nf=nf, gc=gc, wd=wd)
+    applynoise_f = functools.partial(ApplyNoise)
     conv_f = functools.partial(Conv2D, kernel_size=3, padding='same',
                                bias_initializer='zeros',
                                kernel_initializer=_kernel_init(),
