@@ -12,6 +12,7 @@ cycle_mse: False
 network_G:
     nf: 64
     nb: 23
+    apply_noise: False
 # discriminator setting
 network_D:
     nf: 64

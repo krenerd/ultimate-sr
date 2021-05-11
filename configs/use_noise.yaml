@@ -4,17 +4,15 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-GAN'
+log_dir: '/content/drive/MyDrive/ESRGAN-noise'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
-cycle_mse: False
-
+cycle_mse: True
 # generator setting
 network_G:
     nf: 64
     nb: 23
-    apply_noise: False
+    apply_noise: True
 # discriminator setting
-refGAN: False
 network_D:
     nf: 64
 
@@ -53,7 +51,7 @@ feature_criterion: l1
 
 w_gan: !!float 5e-3
 gan_type: ragan  # gan | ragan
-refgan: False       # provide reference image
+refgan: True       # provide reference image
 
 save_steps: 5000
 

@@ -7,11 +7,11 @@ scale: 4
 log_dir: '/content/drive/MyDrive/ESRGAN-cyclemixing'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at initial training
 cycle_mse: True
-
 # generator setting
 network_G:
     nf: 64
     nb: 23
+    apply_noise: False
 # discriminator setting
 network_D:
     nf: 64
