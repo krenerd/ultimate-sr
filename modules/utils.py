@@ -7,7 +7,7 @@ import tensorflow as tf
 from absl import logging
 import io
 from modules.dataset import load_tfrecord_dataset, load_valid_dataset
-
+import matplotlib.pyplot as plt
 
 def load_yaml(load_path):
     """load yaml file"""
