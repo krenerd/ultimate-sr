@@ -15,16 +15,18 @@ network_G:
 network_D:
     nf: 64
 
-# dataset setting
 train_dataset:
     path: '/content/drive/MyDrive/data/div2k_hr/DIV2K_train_HR'
     num_samples: 32208
     using_bin: True
     using_flip: True
     using_rot: True
+    detect_blur: False
+    buffer_size: 1024           # max size of buffer
+    patch_per_image: 128        # number of patches to extract from each image
 test_dataset:
-    set5_path: './data/Set5'
-    set14_path: './data/Set14'
+    set5: './test data/Set5'
+    set14: './test data/Set14'
 
 # training setting
 niter: 400000
@@ -42,7 +44,7 @@ adam_beta2_D: 0.99
 w_pixel: !!float 1e-2
 pixel_criterion: l1
 
-w_feature: 0 # don't use vgg loss
+w_feature: 0.0      # don't use feature matching loss
 feature_criterion: l1
 
 w_gan: !!float 5e-3
@@ -50,3 +52,10 @@ gan_type: ragan  # gan | ragan
 refgan: True       # provide reference image
 
 save_steps: 5000
+
+# logging settings
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True
