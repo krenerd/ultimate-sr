@@ -67,9 +67,12 @@ class ApplyNoise(tf.keras.layers.Layer):
     self.channels = input_shape[-1]
     self.channel_wise = self.add_weight("kernel", shape=(self.channels,), trainable=True)
 
-  def call(self, x):
-    noise = tf.random.normal(tf.shape(x), dtype=x.dtype)
-    return x + noise * self.channel_wise
+  def call(self, x, training=True):
+    if training:
+        noise = tf.random.normal(tf.shape(x), dtype=x.dtype)
+        return x + noise * self.channel_wise
+    else:
+        return x
 
 
 class ResInResDenseBlock(tf.keras.layers.Layer):

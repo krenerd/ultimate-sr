@@ -51,7 +51,7 @@ def evaluate_dataset(dataset, model, cfg):
     data_list = []    # save all SR image for plotting
 
     for lr, hr in dataset:
-        sr = model(lr[np.newaxis,:])[0] #Generate SR image
+        sr = model(lr[np.newaxis,:], training=False)[0] #Generate SR image
         
         if cfg['logging']['psnr']:
             sum_PSNR += evaluate_psnr(sr, hr)
