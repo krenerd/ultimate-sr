@@ -3,7 +3,7 @@ from absl.flags import FLAGS
 import os
 import tensorflow as tf
 
-from modules.models import RRDB_Model, DiscriminatorVGG128
+from modules.models import RRDB_Model, RRDB_Model_16x, DiscriminatorVGG128
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
                             GeneratorLoss, PixelLossDown)
@@ -28,7 +28,10 @@ def main(_):
     cfg = load_yaml(FLAGS.cfg_path)
 
     # define network
-    generator = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
+    if cfg['scale']==4:
+        generator = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
+    if cfg['scale']==16:
+        generator = RRDB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
     discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
     discriminator.summary(line_length=80)

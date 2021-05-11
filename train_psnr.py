@@ -3,7 +3,7 @@ from absl.flags import FLAGS
 import os
 import tensorflow as tf
 
-from modules.models import RRDB_Model
+from modules.models import RRDB_Model, RRDB_Model_16x
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import PixelLoss, PixelLossDown
 from modules.utils import (load_yaml, load_dataset, load_val_dataset, ProgressBar,
@@ -27,7 +27,10 @@ def main(_):
     cfg = load_yaml(FLAGS.cfg_path)
 
     # define network
-    model = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
+    if cfg['scale']==4:
+        generator = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
+    if cfg['scale']==16:
+        generator = RRDB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
     model.summary(line_length=80)
 
     # load dataset
