@@ -102,10 +102,14 @@ def main(_):
             losses_D = {}
             losses_G['reg'] = tf.reduce_sum(generator.losses)
             losses_D['reg'] = tf.reduce_sum(discriminator.losses)
-            losses_G['pixel'] = cfg['w_pixel'] * pixel_loss_fn(hr, sr)
-            losses_G['feature'] = cfg['w_feature'] * fea_loss_fn(hr, sr)
-            losses_G['gan'] = cfg['w_gan'] * gen_loss_fn(hr_output, sr_output)
-            losses_D['gan'] = dis_loss_fn(hr_output, sr_output)
+            if cfg['w_pixel'] > 0.0:
+                losses_G['pixel'] = cfg['w_pixel'] * pixel_loss_fn(hr, sr)
+            if cfg['w_feature'] > 0.0:
+                losses_G['feature'] = cfg['w_feature'] * fea_loss_fn(hr, sr)
+            if cfg['w_gan'] > 0.0:
+                losses_G['gan'] = cfg['w_gan'] * gen_loss_fn(hr_output, sr_output)
+                losses_D['gan'] = dis_loss_fn(hr_output, sr_output)
+                
             total_loss_G = tf.add_n([l for l in losses_G.values()])
             total_loss_D = tf.add_n([l for l in losses_D.values()])
 
