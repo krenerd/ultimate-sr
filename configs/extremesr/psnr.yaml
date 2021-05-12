@@ -27,7 +27,7 @@ train_dataset:
 test_dataset:
     set5: './test data/Set5'
     set14: './test data/Set14'
-    DIV8K: '/content/drive/MyDrive/data/DIV8K_val'
+    DIV8K: '/content/drive/MyDrive/data/DIV8K_val_cropped'
     DIV8K_crop_centor: 1008     # crop center 1008 pixels (1008 % 16==0)
 
 # training setting
