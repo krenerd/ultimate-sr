@@ -137,7 +137,7 @@ def RRDB_Model_16x(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
     fea_resize = tf.image.resize(fea, [size_fea_h * 16, size_fea_w * 16],
                                  method='nearest', name='upsample_nn_final')
     fea = conv_f(filters=nf, activation=lrelu_f(), name='conv_hr')(fea_resize)
-    out = conv_f(filters=nf, name='conv_last')(fea)
+    out = conv_f(filters=channels, name='conv_last')(fea)
     return Model(inputs, out, name=name)
 
 def RRDB_Model(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
