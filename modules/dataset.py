@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import cv2
+import tqdm
 from modules.resizing import imresize_np
 
 def load_valid_dataset( data_path, scale=4, crop_centor=0):
@@ -16,8 +17,8 @@ def load_valid_dataset( data_path, scale=4, crop_centor=0):
         # Returns (LR, HR)
         image=tf.dtypes.cast(image, tf.float32)
 
-        if crop_centor > 0:         #If have to crop center of image
-            image = tf.keras.layers.experimental.preprocessing.CenterCrop(crop_centor, crop_centor)(image)
+        if crop_centor > 0:  
+            image = tf.keras.layers.experimental.preprocessing.CenterCrop(crop_centor, crop_centor)([image])[0]
         else:
             image = tf.image.resize(image,((image.shape[0]//scale) * scale,(image.shape[1]//scale)*scale) ,
                                 method=tf.image.ResizeMethod.BICUBIC).numpy()
@@ -27,7 +28,7 @@ def load_valid_dataset( data_path, scale=4, crop_centor=0):
     path_list = tf.data.Dataset.list_files(data_path+'/*.png', shuffle=False)
     dataset = path_list.map(read_image, num_parallel_calls=tf.data.AUTOTUNE)
     im_list=[]
-    for image in dataset:
+    for image in tqdm.tqdm(dataset, position=0, leave=True):
         im_list.append(generate_val_data(image))
     return im_list
 

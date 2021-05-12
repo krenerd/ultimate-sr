@@ -7,7 +7,7 @@ from modules.models import RRDB_Model, RRDB_Model_16x
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import PixelLoss, PixelLossDown
 from modules.utils import (load_yaml, load_dataset, load_val_dataset, ProgressBar,
-                           set_memory_growth, center_crop_val)
+                           set_memory_growth)
 from evaluate import evaluate_dataset
 
 flags.DEFINE_string('cfg_path', './configs/psnr.yaml', 'config file path')
@@ -129,7 +129,7 @@ def main(_):
                     tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
                     if 'DIV8K' in cfg['test_dataset']:
                         tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
-                        
+
                 if cfg['logging']['lpips']:
                     tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
                     tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
