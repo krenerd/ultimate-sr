@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from modules.resizing import imresize_np
 
-def load_valid_dataset( data_path, scale=4 ):
+def load_valid_dataset( data_path, scale=4, crop_centor=0):
     # evaluate the model in various datasets for various methods
     @tf.function()
     def read_image(path):
@@ -15,9 +15,13 @@ def load_valid_dataset( data_path, scale=4 ):
     def generate_val_data(image):
         # Returns (LR, HR)
         image=tf.dtypes.cast(image, tf.float32)
-        image = tf.image.resize(image,((image.shape[0]//scale) * scale,(image.shape[1]//scale)*scale) ,
+
+        if crop_centor > 0:         #If have to crop center of image
+            image = tf.keras.layers.experimental.preprocessing.CenterCrop(crop_centor, crop_centor)(image)
+        else:
+            image = tf.image.resize(image,((image.shape[0]//scale) * scale,(image.shape[1]//scale)*scale) ,
                                 method=tf.image.ResizeMethod.BICUBIC).numpy()
-        lr = imresize_np(image, 1/scale)
+        lr = imresize_np(image, 1/scale)    # generate lr copy
         return lr,image
 
     path_list = tf.data.Dataset.list_files(data_path+'/*.png', shuffle=False)

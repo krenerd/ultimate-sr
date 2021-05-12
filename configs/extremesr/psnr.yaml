@@ -21,15 +21,17 @@ train_dataset:
     using_flip: True
     using_rot: True
     detect_blur: False
-    buffer_size: 4096           # max size of buffer
-    patch_per_image: 512        # number of patches to extract from each image
+    buffer_size: 8192           # min size of buffer
+    patch_per_image: 1024        # number of patches to extract from each image
 
 test_dataset:
     set5: './test data/Set5'
     set14: './test data/Set14'
+    DIV8K: '/content/drive/MyDrive/data/DIV8K_val'
+    DIV8K_crop_centor: 1008     # crop center 1008 pixels (1008 % 16==0)
 
 # training setting
-niter: 500000
+niter: 100000
 lr: !!float 2e-4
 lr_steps: [200000, 400000]
 lr_rate: 0.5

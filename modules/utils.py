@@ -46,11 +46,11 @@ def set_memory_growth():
             # Memory growth must be set before GPUs have been initialized
             logging.info(e)
 
-def load_val_dataset(cfg, key):
+def load_val_dataset(cfg, key, crop_centor=0):
     """load dataset"""
     data_path = cfg['test_dataset'][key]
     logging.info("load {} from {}".format(key, data_path))
-    dataset = load_valid_dataset(data_path, cfg['scale'])
+    dataset = load_valid_dataset(data_path, cfg['scale'], crop_centor=crop_centor)
     return dataset
 
 def load_dataset(cfg, key, shuffle=True, buffer_size=10240):

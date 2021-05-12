@@ -31,6 +31,8 @@ def evaluate_ssim(sr, hr):
 def plot_examples(data_list, plot_size=4):
     # returns a image with all (SR, HR) pair visualized
     plt.close()
+
+    data_list = data_list[:min(14, len(data_list))]       # plot first 14 images if more data exists
     num_data = len(data_list)
     fig=plt.figure(figsize=(plot_size * num_data, plot_size * 2))
 

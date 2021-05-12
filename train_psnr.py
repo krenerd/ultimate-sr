@@ -7,7 +7,7 @@ from modules.models import RRDB_Model, RRDB_Model_16x
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import PixelLoss, PixelLossDown
 from modules.utils import (load_yaml, load_dataset, load_val_dataset, ProgressBar,
-                           set_memory_growth)
+                           set_memory_growth, center_crop_val)
 from evaluate import evaluate_dataset
 
 flags.DEFINE_string('cfg_path', './configs/psnr.yaml', 'config file path')
@@ -37,7 +37,8 @@ def main(_):
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=True)
     set5_dataset = load_val_dataset(cfg, 'set5')
     set14_dataset = load_val_dataset(cfg, 'set14')
-
+    if 'DIV8K' in cfg['test_dataset']:
+        DIV8K_val = load_val_dataset(cfg, 'DIV8K', crop_centor=cfg['test_dataset']['DIV8K_crop_centor'])
     # define optimizer
     learning_rate = MultiStepLR(cfg['lr'], cfg['lr_steps'], cfg['lr_rate'])
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate,
@@ -113,24 +114,33 @@ def main(_):
             # log results on test data
             set5_logs = evaluate_dataset(set5_dataset, model, cfg)
             set14_logs = evaluate_dataset(set14_dataset, model, cfg)
+            if 'DIV8K' in cfg['test_dataset']:
+                DIV8K_logs = evaluate_dataset(DIV8K_val, model, cfg)
 
             with summary_writer.as_default():
                 if cfg['logging']['psnr']:
                     tf.summary.scalar('set5/psnr', set5_logs['psnr'], step=steps)
                     tf.summary.scalar('set14/psnr', set14_logs['psnr'], step=steps)
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
 
                 if cfg['logging']['ssim']:
                     tf.summary.scalar('set5/ssim', set5_logs['ssim'], step=steps)
                     tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
-
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
+                        
                 if cfg['logging']['lpips']:
                     tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
                     tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
-                
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/lpips', DIV8K_logs['lpips'], step=steps)
+
                 if cfg['logging']['plot_samples']:
                     tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
                     tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
-            
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.image("DIV8K/samples", [DIV8K_logs['samples']], step=steps)
 
     print("\n[*] training done!")
 
