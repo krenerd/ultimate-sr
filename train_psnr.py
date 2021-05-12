@@ -28,9 +28,9 @@ def main(_):
 
     # define network
     if cfg['scale']==4:
-        generator = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
+        model = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
     if cfg['scale']==16:
-        generator = RRDB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
+        model = RRDB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
     model.summary(line_length=80)
 
     # load dataset
