@@ -82,7 +82,7 @@ def _transform_images(gt_size, scale, using_flip, using_rot, detect_blur):
     return transform_images
 
 def generate_patches(im, buffer, patch_per_image, gt_size, scale, using_bin, 
-                    using_flip, detect_blur, using_rot):
+                    using_flip, using_rot, detect_blur):
     for _ in range(patch_per_image):
         res = _transform_images(gt_size, scale, using_flip, using_rot, detect_blur)(im)
         if not res is None:
@@ -112,7 +112,7 @@ def load_tfrecord_dataset(tfrecord_name, batch_size, gt_size, scale,
     buffer=[]
 
     f_read_image=lambda im:generate_patches(im, buffer, patch_per_image,gt_size, scale,
-        using_bin, using_flip, detect_blur, using_rot)
+        using_bin, using_flip, using_rot, detect_blur)
     train_path=[os.path.join(tfrecord_name, x) for x in os.listdir(tfrecord_name)]
     train_path = tf.data.Dataset.from_tensor_slices(train_path).shuffle(len(train_path))
 
