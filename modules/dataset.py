@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import tqdm
+import os
 from modules.resizing import imresize_np
 
 def load_valid_dataset( data_path, scale=4, crop_centor=0):
@@ -24,8 +25,9 @@ def load_valid_dataset( data_path, scale=4, crop_centor=0):
                                 method=tf.image.ResizeMethod.BICUBIC).numpy()
         lr = imresize_np(image, 1/scale)    # generate lr copy
         return lr,image
+    path_list=[os.path.join(data_path, x) for x in sorted(os.listdir(data_path))]   # sort data path and read in order
+    path_list = tf.data.Dataset.from_tensor_slices(path_list)
 
-    path_list = tf.data.Dataset.list_files(data_path+'/*.png', shuffle=False)
     dataset = path_list.map(read_image, num_parallel_calls=tf.data.AUTOTUNE)
     im_list=[]
     for image in tqdm.tqdm(dataset, position=0, leave=True):
@@ -34,7 +36,7 @@ def load_valid_dataset( data_path, scale=4, crop_centor=0):
 
 def read_img(path):
     image = tf.io.read_file(path)
-    image = tf.image.decode_png(image)
+    image = image = tf.io.decode_image(image, expand_animations = False)
     return image
 
 def _transform_images(gt_size, scale, using_flip, using_rot, detect_blur):
@@ -111,8 +113,9 @@ def load_tfrecord_dataset(tfrecord_name, batch_size, gt_size, scale,
 
     f_read_image=lambda im:generate_patches(im, buffer, patch_per_image,gt_size, scale,
         using_bin, using_flip, detect_blur, using_rot)
+    train_path=[os.path.join(tfrecord_name, x) for x in os.listdir(tfrecord_name)]
+    train_path = tf.data.Dataset.from_tensor_slices(train_path).shuffle(len(train_path))
 
-    train_path = tf.data.Dataset.list_files(tfrecord_name+'/*.png')
     read_image = train_path.map(read_img, num_parallel_calls=tf.data.AUTOTUNE)
     image_iter = iter(read_image.repeat())
     return lambda :load_data_batch(buffer, image_iter, f_read_image, batch_size, buffer_size)
