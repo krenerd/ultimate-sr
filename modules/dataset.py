@@ -10,7 +10,7 @@ def load_valid_dataset( data_path, scale=4, crop_centor=0):
     def read_image(path):
         # read image in graph-mode
         image = tf.io.read_file(path)
-        image = tf.image.decode_jpeg(image)
+        image = image = tf.io.decode_image(image, expand_animations = False)
         return image / 255
         
     def generate_val_data(image):
