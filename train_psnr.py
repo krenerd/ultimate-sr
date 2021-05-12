@@ -38,7 +38,7 @@ def main(_):
     set5_dataset = load_val_dataset(cfg, 'set5')
     set14_dataset = load_val_dataset(cfg, 'set14')
     if 'DIV8K' in cfg['test_dataset']:
-        DIV8K_val = load_val_dataset(cfg, 'DIV8K')
+        DIV8K_val = load_val_dataset(cfg, 'DIV8K', crop_centor=cfg['test_dataset']['DIV8K_crop_centor'])
     # define optimizer
     learning_rate = MultiStepLR(cfg['lr'], cfg['lr_steps'], cfg['lr_rate'])
     optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate,
