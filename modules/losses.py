@@ -7,7 +7,7 @@ def PixelLossDown(criterion='l1', lr_size=(24, 24)):
     downsize=tf.keras.layers.experimental.preprocessing.Resizing(lr_size[0], lr_size[1], interpolation='bilinear')
     def _PixelLossDown(sr, hr):
         sr_down = downsize(sr)
-        hr_down = downsize(sr)
+        hr_down = downsize(hr)
         if criterion == 'l1':
             return tf.keras.losses.MeanAbsoluteError()(sr_down, hr_down)
         elif criterion == 'l2':
