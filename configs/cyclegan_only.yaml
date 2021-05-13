@@ -12,7 +12,7 @@ network_G:
     name: 'RRDB'
     nf: 64
     nb: 23
-    apply_noise: False
+    apply_noise: True
 # discriminator setting
 network_D:
     nf: 64
