@@ -141,7 +141,7 @@ class ReceptiveFieldDenseBlock_5C(tf.keras.layers.Layer):
     """Receptive Field Dense Block"""
     def __init__(self, nf=64, gc=32, res_beta=0.2, wd=0., name='RDB5C',
                  **kwargs):
-        super(ResDenseBlock_5C, self).__init__(name=name, **kwargs)
+        super(ReceptiveFieldDenseBlock_5C, self).__init__(name=name, **kwargs)
         # gc: growth channel, i.e. intermediate channels
         self.res_beta = res_beta
         self.lrelu = functools.partial(LeakyReLU, alpha=0.2)
@@ -227,7 +227,10 @@ def RRDB_Model_16x(size, channels, cfg_net, gc=32, wd=0., name='RRDB_model'):
     nf, nb, apply_noise = cfg_net['nf'], cfg_net['nb'], cfg_net['apply_noise']
     lrelu_f = functools.partial(LeakyReLU, alpha=0.2)
     rrdb_f = functools.partial(ResInResDenseBlock, apply_noise=apply_noise, nf=nf, gc=gc, wd=wd)
-    conv_f = functools.partial(ReceptiveFieldBlock, nf=nf, gc=gc)
+    conv_f = functools.partial(Conv2D, kernel_size=3, padding='same',
+                               bias_initializer='zeros',
+                               kernel_initializer=_kernel_init(),
+                               kernel_regularizer=_regularizer(wd))
     rrdb_truck_f_1 = tf.keras.Sequential(
         [rrdb_f(name="RRDB_1_{}".format(i)) for i in range(nb)],
         name='RRDB_trunk_1')
@@ -292,6 +295,7 @@ def RFB_Model_16x(size, channels, cfg_net, gc=16, wd=0., name='RRDB_model'):
     up1 = SubpixelConvolutionLayer(nf, gc, wd)(trunck)  # 4x down
     up2 = SubpixelConvolutionLayer(nf, gc, wd)(up1)     # hr res
     out = conv_f(filters=nf, name='conv_last_1')(up2)
+    out = lrelu_f()(out)
     out = conv_f(filters=channels, name='conv_first_2')(out)
     return Model(inputs, out, name=name)
 
