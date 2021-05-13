@@ -9,6 +9,7 @@ pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE'  # directory to load from at i
 cycle_mse: True
 # generator setting
 network_G:
+    name: 'RRDB'
     nf: 64
     nb: 23
     apply_noise: True

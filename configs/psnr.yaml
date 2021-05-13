@@ -9,6 +9,7 @@ pretrain_name: null
 cycle_mse: False
 # generator setting
 network_G:
+    name: 'RRDB'
     nf: 64
     nb: 23
     apply_noise: False

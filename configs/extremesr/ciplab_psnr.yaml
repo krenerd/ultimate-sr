@@ -1,14 +1,15 @@
 # general setting
-batch_size: 16
+batch_size: 2
 input_size: 24
 gt_size: 384
 ch_size: 3
 scale: 16
-log_dir: '/content/drive/MyDrive/ExtremeSR-MSE-500K-DIV8K'
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-ESRGAN'
 pretrain_name: null
 cycle_mse: False
 # generator setting
 network_G:
+    name: 'RRDB_CIPLAB'
     nf: 64
     nb: 23
     apply_noise: False

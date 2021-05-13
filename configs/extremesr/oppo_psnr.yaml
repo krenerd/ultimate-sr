@@ -1,36 +1,39 @@
 # general setting
 batch_size: 16
 input_size: 32
-gt_size: 128
+gt_size: 512
 ch_size: 3
-scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-MSE-noblur'
+scale: 16
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-RFB_ESRGAN'
 pretrain_name: null
 cycle_mse: False
 # generator setting
 network_G:
-    name: 'RRDB'
+    name: 'RFB_ESRGAN'
     nf: 64
-    nb: 23
+    nb_rrbd: 16
+    nb_rfb: 8
     apply_noise: False
 
 # dataset setting
 train_dataset:
-    path: '/content/drive/MyDrive/data/div2k_hr/DIV2K_train_HR'
+    path: '/content/drive/MyDrive/data/DIV8K'
     num_samples: 32208
     using_bin: True
     using_flip: True
     using_rot: True
-    detect_blur: True
-    buffer_size: 1024           # max size of buffer
-    patch_per_image: 128        # number of patches to extract from each image
+    detect_blur: False
+    buffer_size: 8192           # min size of buffer
+    patch_per_image: 1024        # number of patches to extract from each image
 
 test_dataset:
     set5: './test data/Set5'
     set14: './test data/Set14'
+    DIV8K: '/content/drive/MyDrive/data/DIV8K_val_cropped'
+    DIV8K_crop_centor: 0     # crop center 1008 pixels (1008 % 16==0)
 
 # training setting
-niter: 500000
+niter: 100000
 lr: !!float 2e-4
 lr_steps: [200000, 400000]
 lr_rate: 0.5
