@@ -153,11 +153,11 @@ class ReceptiveFieldDenseBlock_5C(tf.keras.layers.Layer):
         self.rfb5 = ReceptiveFieldBlock(nf=nf, gc=gc, wd=wd)
 
     def call(self, x):
-        x1 = self.lrelu(self.rfb1(x))
-        x2 = self.lrelu(self.rfb2(tf.concat([x, x1], 3)))
-        x3 = self.lrelu(self.rfb3(tf.concat([x, x1, x2], 3)))
-        x4 = self.lrelu(self.rfb4(tf.concat([x, x1, x2, x3], 3)))
-        x5 = self.lrelu(self.rfb5(tf.concat([x, x1, x2, x3, x4], 3)))
+        x1 = self.lrelu()(self.rfb1(x))
+        x2 = self.lrelu()(self.rfb2(tf.concat([x, x1], 3)))
+        x3 = self.lrelu()(self.rfb3(tf.concat([x, x1, x2], 3)))
+        x4 = self.lrelu()(self.rfb4(tf.concat([x, x1, x2, x3], 3)))
+        x5 = self.lrelu()(self.rfb5(tf.concat([x, x1, x2, x3, x4], 3)))
         return x5 * self.res_beta + x
 
 class  ResidualOfReceptiveFieldDenseBlock(tf.keras.layers.Layer):
@@ -199,11 +199,11 @@ class SubpixelConvolutionLayer(tf.keras.layers.Layer):
     def forward(self, x):
         out = self.upsample(x)
         out = self.rfb1(out)
-        out = self.lrelu(out)
+        out = self.lrelu()(out)
         out = self.conv(out)
         out = self.pixel_shuffle(out, 2)
         out = self.rfb2(out)
-        out = self.lrelu(out)
+        out = self.lrelu()(out)
 
         return out
 

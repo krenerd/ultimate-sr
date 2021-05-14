@@ -77,3 +77,35 @@ def evaluate_dataset(dataset, model, cfg):
         logs['samples'] = plot_examples(data_list)
 
     return logs
+
+def get_noise_layers(generator, plot_layer_wise=True):
+    noise_feature=[]
+    def recurse_all_layer(layer):
+        try:  # pass only when layer is tf.keras.Model
+            _=layer.layers
+        except: # if layer is tf.keras.Layer
+            if hasattr(layer,'applynoise'):     # if layer has noise layer
+                noise_feature.append(layer.applynoise.weights[0])
+                return
+        
+        for sublayer in layer.layers:
+            recurse_all_layer(sublayer)
+    
+    recurse_all_layer(generator)
+
+    if plot_layer_wise:
+        max_arr, mean_arr, noise_arr=[],[],[]
+        for x in noise_feature:
+            max_arr.append(max(np.abs(x)))
+            mean_arr.append(np.median(np.abs(x)))
+            noise_arr.append(np.abs(x))
+
+
+        plt.boxplot(noise_arr)
+        plt.plot(np.arange(1, len(max_arr)+1),max_arr, c='black')
+        plt.plot(np.arange(1, len(max_arr)+1),mean_arr, c='orange')
+        plt.xticks([])
+        plt.xlabel('# layer')
+        plt.show()
+
+    return noise_feature

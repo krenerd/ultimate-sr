@@ -1,11 +1,11 @@
 # general setting
-batch_size: 16
+batch_size: 256
 input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-noise'
-pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE-500K-DIV2K'  # directory to load from at initial training
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-cycleonly-big'
+pretrain_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-MSE-500K-DIV2K'  # directory to load from at initial training
 cycle_mse: True
 # generator setting
 network_G:
@@ -17,16 +17,15 @@ network_G:
 network_D:
     nf: 64
 
-# dataset setting
 train_dataset:
-    path: '/content/drive/MyDrive/data/div2k_hr/DIV2K_train_HR'
+    path: '/content/drive/MyDrive/data/DIV2K'
     num_samples: 32208
     using_bin: True
     using_flip: True
     using_rot: True
     detect_blur: False
-    buffer_size: 1024           # max size of buffer
-    patch_per_image: 128        # number of patches to extract from each image
+    buffer_size: 8196           # max size of buffer
+    patch_per_image: 1024        # number of patches to extract from each image
 test_dataset:
     set5: './test data/Set5'
     set14: './test data/Set14'
@@ -47,7 +46,7 @@ adam_beta2_D: 0.99
 w_pixel: !!float 1e-2
 pixel_criterion: l1
 
-w_feature: 1.0
+w_feature: 0.0      # don't use feature matching loss
 feature_criterion: l1
 
 w_gan: !!float 5e-3
