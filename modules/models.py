@@ -112,7 +112,7 @@ class ReceptiveFieldBlock(tf.keras.layers.Layer):
         self.conv_linear = _Conv2DLayer(filters=nf, kernel_size=1, activation=lrelu_f())
         self.lrelu = lrelu_f()
 
-    def forward(self, x):
+    def call(self, x):
         shortcut = self.shortcut(x)
 
         branch1 = self.branch1_1(x)
@@ -139,7 +139,7 @@ class ReceptiveFieldBlock(tf.keras.layers.Layer):
 
 class ReceptiveFieldDenseBlock_5C(tf.keras.layers.Layer):
     """Receptive Field Dense Block"""
-    def __init__(self, nf=64, gc=32, res_beta=0.2, wd=0., name='RDB5C',
+    def __init__(self, nf=64, gc=16, res_beta=0.2, wd=0., name='RDB5C',
                  **kwargs):
         super(ReceptiveFieldDenseBlock_5C, self).__init__(name=name, **kwargs)
         # gc: growth channel, i.e. intermediate channels
@@ -162,7 +162,7 @@ class ReceptiveFieldDenseBlock_5C(tf.keras.layers.Layer):
 
 class  ResidualOfReceptiveFieldDenseBlock(tf.keras.layers.Layer):
     """Residual in Residual Dense Block"""
-    def __init__(self, apply_noise=False, nf=64, gc=32, res_beta=0.2, wd=0., name='RRDB',
+    def __init__(self, apply_noise=False, nf=64, gc=16, res_beta=0.2, wd=0., name='RRDB',
                  **kwargs):
         super(ResidualOfReceptiveFieldDenseBlock, self).__init__(name=name, **kwargs)
         self.apply_noise = apply_noise
@@ -190,9 +190,9 @@ class SubpixelConvolutionLayer(tf.keras.layers.Layer):
         """
         super(SubpixelConvolutionLayer, self).__init__()
         self.lrelu = functools.partial(LeakyReLU, alpha=0.2)
-        self.upsample = tf.keras.layers.Upsample2D((2, 2), interpolation="nearest")
+        self.upsample = tf.keras.layers.UpSampling2D((2, 2), interpolation="nearest")
         self.rfb1 = ReceptiveFieldBlock(nf=nf, gc=gc, wd=wd)
-        self.conv = Conv2D(nf, nf * 4, kernel_size=3, padding='same')
+        self.conv = Conv2D(nf * 4, kernel_size=3, padding='same')
         self.pixel_shuffle = tf.nn.depth_to_space
         self.rfb2 = ReceptiveFieldBlock(nf=nf, gc=gc, wd=wd)
 
