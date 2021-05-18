@@ -42,6 +42,8 @@ def main(_):
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=False)
     set5_dataset = load_val_dataset(cfg, 'set5')
     set14_dataset = load_val_dataset(cfg, 'set14')
+    if 'DIV8K' in cfg['test_dataset']:
+        DIV8K_val = load_val_dataset(cfg, 'DIV8K', crop_centor=cfg['test_dataset']['DIV8K_crop_centor'])
 
     # define optimizer
     learning_rate_G = MultiStepLR(cfg['lr_G'], cfg['lr_steps'], cfg['lr_rate'])
@@ -171,24 +173,34 @@ def main(_):
             # log results on test data
             set5_logs = evaluate_dataset(set5_dataset, generator, cfg)
             set14_logs = evaluate_dataset(set14_dataset, generator, cfg)
+            if 'DIV8K' in cfg['test_dataset']:
+                DIV8K_logs = evaluate_dataset(DIV8K_val, generator, cfg)
 
             with summary_writer.as_default():
                 if cfg['logging']['psnr']:
                     tf.summary.scalar('set5/psnr', set5_logs['psnr'], step=steps)
                     tf.summary.scalar('set14/psnr', set14_logs['psnr'], step=steps)
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
 
                 if cfg['logging']['ssim']:
                     tf.summary.scalar('set5/ssim', set5_logs['ssim'], step=steps)
                     tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
 
                 if cfg['logging']['lpips']:
                     tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
                     tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
-                
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/lpips', DIV8K_logs['lpips'], step=steps)
+
                 if cfg['logging']['plot_samples']:
                     tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
                     tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
-
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.image("DIV8K/samples", [DIV8K_logs['samples']], step=steps)
+                        
     print("\n [*] training done!")
 
 

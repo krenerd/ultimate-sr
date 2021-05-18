@@ -10,7 +10,7 @@ cycle_mse: False
 
 # generator setting
 network_G:
-    name: 'RRDB'
+    name: 'RRDB_CIPLAB'
     nf: 64
     nb: 23
     apply_noise: False
