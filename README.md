@@ -90,9 +90,13 @@ logging:
 ```
 
 `cycle_mse`: use cycle-consistent content loss
+
 `apply_noise`: provide random noise to the generator network
+
 `detect_blur`: filter blurry images in the training dataset
+
 `refgan`: provide reference image to the discriminator network
+
 
 ### Training
 The training process is divided into two parts;
