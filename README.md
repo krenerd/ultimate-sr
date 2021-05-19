@@ -7,7 +7,7 @@ This repository contains the implementation and training of the methods proposed
 The methods presented in our paper were implemented with the ESRGAN network from ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks by Xintao Wang et al. In our work we propose the following:
 
 * We provide weigthed random noise to the generator to provide it with the ability to generate diverse outputs.
-* We propose a weaker content loss that is compatible with the diverse outputs of the generator, and does not contradict the adversarial loss.
+* We propose a weaker content loss that is compatible with the multiple outputs of the generator, and does not contradict the adversarial loss.
 * We improve the SR quality by filtering blurry regions in the training data using Laplacian activation.
 * We additionally provide the LR image to the discriminator as a reference image to give better gradient feedback to the generator.
 
