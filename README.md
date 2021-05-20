@@ -138,8 +138,8 @@ python train_esrgan.py --cfg_path="./configs/esrgan_*.yaml" --gpu=0
         <tr>
             <th>Image Name</th>
             <th>Bicubic</th>
-            <th>PSNR (pretrain)</th>
             <th>ESRGAN</th>
+            <th>Our Methods</th>
             <th>Ground Truth</th>
         </tr>
     </thead>
@@ -201,8 +201,8 @@ python train_esrgan.py --cfg_path="./configs/esrgan_*.yaml" --gpu=0
         <tr>
             <th>Image Name</th>
             <th>Bicubic</th>
-            <th>PSNR (pretrain)</th>
             <th>ESRGAN</th>
+            <th>Our Methods</th>
             <th>Ground Truth</th>
         </tr>
     </thead>
