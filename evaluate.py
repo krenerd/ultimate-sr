@@ -3,6 +3,7 @@ import numpy as np
 import lpips
 import os
 import torch
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 from modules.dataset import load_valid_dataset
 from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x
@@ -55,7 +56,7 @@ def evaluate_dataset(dataset, model, cfg):
     sum_LPIPS, sum_PSNR, sum_SSIM = 0, 0, 0
     data_list = []    # save all SR image for plotting
 
-    for lr, hr in dataset:
+    for lr, hr in tqdm(dataset, position=0, leave=True):
         sr = model(lr[np.newaxis,:], training=False)[0] #Generate SR image
         
         if cfg['logging']['psnr']:
