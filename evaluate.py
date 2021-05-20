@@ -3,7 +3,9 @@ import numpy as np
 import lpips
 import torch
 import matplotlib.pyplot as plt
-from modules.utils import plot_to_image
+from modules.dataset import load_valid_dataset
+from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x
+from modules.utils import plot_to_image,load_yaml
 lpips_alex = lpips.LPIPS(net='alex')
 
 def evaluate_lpips(sr, hr):
@@ -109,3 +111,30 @@ def get_noise_layers(generator, plot_layer_wise=True):
         plt.show()
 
     return noise_feature
+
+def evaluate_with_path(cfg_path, dataset_path, scale=4):
+    cfg=load_yaml(cfg_path)
+    if cfg['network_G']['name']=='RRDB':    # ESRGAN 4x
+        model = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
+    elif cfg['network_G']['name']=='RRDB_CIPLAB':
+        model = RRDB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
+    elif cfg['network_G']['name']=='RFB_ESRGAN':
+        model = RFB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
+    
+    checkpoint_dir = cfg['log_dir'] + '/checkpoints/'
+    checkpoint = tf.train.Checkpoint(step=tf.Variable(0, name='step'), model=model)
+    manager = tf.train.CheckpointManager(checkpoint=checkpoint,
+                                         directory=checkpoint_dir,
+                                         max_to_keep=3)
+    if manager.latest_checkpoint:
+        checkpoint.restore(manager.latest_checkpoint)
+        print('[*] load ckpt from {} at step {}.'.format(
+            manager.latest_checkpoint, checkpoint.step.numpy()))
+    else:
+        print(f"Checkpoint doesn't exist in {manager.latest_checkpoint}.")
+
+    cfg_logging={'logging': {'lpips':True, 'psnr':True, 'ssim': True, 'samples': False}}
+    dataset = load_valid_dataset(dataset_path, scale, crop_centor=0)
+
+    logs = evaluate_dataset(dataset, model, cfg_logging)
+    return logs
