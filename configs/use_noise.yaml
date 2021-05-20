@@ -44,7 +44,7 @@ adam_beta2_G: 0.99
 adam_beta1_D: 0.9
 adam_beta2_D: 0.99
 
-w_pixel: !!float 1e-2
+w_pixel: 10
 pixel_criterion: l1
 
 w_feature: 1.0

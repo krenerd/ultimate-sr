@@ -1,12 +1,13 @@
 # general setting
-batch_size: 16
-input_size: 32
-gt_size: 512
+batch_size: 3
+input_size: 24
+gt_size: 384
 ch_size: 3
 scale: 16
-log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-RFB_ESRGAN'
-pretrain_name: null
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-ESRGAN-baseline'
+pretrain_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-ESRGAN-blurdetect'  # directory to load from at initial training
 cycle_mse: False
+
 # generator setting
 network_G:
     name: 'RFB_ESRGAN'
@@ -14,6 +15,10 @@ network_G:
     nb_rrbd: 16
     nb_rfb: 8
     apply_noise: False
+# discriminator setting
+refGAN: False
+network_D:
+    nf: 64
 
 # dataset setting
 train_dataset:
@@ -22,10 +27,9 @@ train_dataset:
     using_bin: True
     using_flip: True
     using_rot: True
-    detect_blur: False
-    buffer_size: 8192           # min size of buffer
-    patch_per_image: 1024        # number of patches to extract from each image
-
+    detect_blur: True
+    buffer_size: 1024           # max size of buffer
+    patch_per_image: 128        # number of patches to extract from each image
 test_dataset:
     set5: './test data/Set5'
     set14: './test data/Set14'
@@ -33,16 +37,27 @@ test_dataset:
     DIV8K_crop_centor: 0     # crop center 1008 pixels (1008 % 16==0)
 
 # training setting
-niter: 100000
-lr: !!float 2e-4
-lr_steps: [25000, 50000, 75000]
+niter: 400000
+
+lr_G: !!float 1e-4
+lr_D: !!float 1e-4
+lr_steps: [50000, 100000, 200000, 300000]
 lr_rate: 0.5
 
 adam_beta1_G: 0.9
 adam_beta2_G: 0.99
+adam_beta1_D: 0.9
+adam_beta2_D: 0.99
 
-w_pixel: 1.0
+w_pixel: 10
 pixel_criterion: l1
+
+w_feature: 1.0
+feature_criterion: l1
+
+w_gan: !!float 5e-3
+gan_type: ragan  # gan | ragan
+refgan: False       # provide reference image
 
 save_steps: 5000
 
