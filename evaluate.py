@@ -133,7 +133,7 @@ def evaluate_with_path(cfg_path, dataset_path, scale=4):
     else:
         print(f"Checkpoint doesn't exist in {manager.latest_checkpoint}.")
 
-    cfg_logging={'logging': {'lpips':True, 'psnr':True, 'ssim': True, 'samples': False}}
+    cfg_logging={'logging': {'lpips':True, 'psnr':True, 'ssim': True, 'plot_samples': False}}
     dataset = load_valid_dataset(dataset_path, scale, crop_centor=0)
 
     logs = evaluate_dataset(dataset, model, cfg_logging)

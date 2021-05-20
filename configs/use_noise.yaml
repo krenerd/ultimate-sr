@@ -4,7 +4,7 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-noise'
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-noise'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE-500K-DIV2K'  # directory to load from at initial training
 cycle_mse: True
 # generator setting
