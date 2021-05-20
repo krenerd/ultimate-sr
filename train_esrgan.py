@@ -43,6 +43,7 @@ def main(_):
     set5_dataset = load_val_dataset(cfg, 'set5')
     set14_dataset = load_val_dataset(cfg, 'set14')
     if 'DIV8K' in cfg['test_dataset']:
+        print('[*] Loading test dataset.')
         DIV8K_val = load_val_dataset(cfg, 'DIV8K', crop_centor=cfg['test_dataset']['DIV8K_crop_centor'])
 
     # define optimizer

@@ -56,6 +56,7 @@ def evaluate_dataset(dataset, model, cfg):
     sum_LPIPS, sum_PSNR, sum_SSIM = 0, 0, 0
     data_list = []    # save all SR image for plotting
 
+    print("Evaluating on test dataset.")
     for lr, hr in tqdm(dataset, position=0, leave=True):
         sr = model(lr[np.newaxis,:], training=False)[0] #Generate SR image
         
