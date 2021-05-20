@@ -196,7 +196,7 @@ class SubpixelConvolutionLayer(tf.keras.layers.Layer):
         self.pixel_shuffle = tf.nn.depth_to_space
         self.rfb2 = ReceptiveFieldBlock(nf=nf, gc=gc, wd=wd)
 
-    def forward(self, x):
+    def call(self, x):
         out = self.upsample(x)
         out = self.rfb1(out)
         out = self.lrelu()(out)
