@@ -6,7 +6,7 @@ import pathlib
 import numpy as np
 import tensorflow as tf
 
-from modules.models import RRDB_Model
+from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x
 from modules.utils import (load_yaml, set_memory_growth, imresize_np,
                            tensor2img, rgb2ycbcr, create_lr_hr_pair,
                            calculate_psnr, calculate_ssim)
@@ -15,7 +15,6 @@ from modules.utils import (load_yaml, set_memory_growth, imresize_np,
 flags.DEFINE_string('cfg_path', './configs/esrgan.yaml', 'config file path')
 flags.DEFINE_string('gpu', '0', 'which gpu to use')
 flags.DEFINE_string('img_path', '', 'path to input image')
-
 
 def main(_argv):
     # init
