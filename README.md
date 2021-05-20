@@ -115,6 +115,8 @@ python train_esrgan.py --cfg_path="./configs/esrgan_*.yaml" --gpu=0
 
 ## Results
 
+Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD100, Urban100, and Manga109 dataset. The scores are displayed in the tables below, in the order LPIPS/PSNR/SSIM.
+
 ### Pretrained PSNR Network
 
 | <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> | <sub>Manga109</sub> |
