@@ -121,8 +121,8 @@ python train_esrgan.py --cfg_path="./configs/esrgan_*.yaml" --gpu=0
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | <sub>Baseline ESRGAN</sub> | <sub>0.0538/27.93</sub> |<sub>0.1117/24.53</sub>|<sub>26.90/0.7101</sub>|<sub>24.52/0.7221</sub>|<sub>27.58/0.8555</sub>|
 | <sub>+refGAN</sub> | <sub>0.0536/27.99</sub> | <sub>0.1157/24.4505</sub> | <sub>27.71/0.7420</sub> | <sub>26.64/0.8033</sub> | <sub>31.02/0.9148</sub> |
-| <sub>+Add noise</sub> | <sub>32.63/0.9002</sub> | <sub>28.87/0.7889</sub> | <sub>27.77/0.7436</sub> | <sub>26.82/ 0.8087</sub>| <sub>31.22/ 0.9173</sub>|
-|<sub>+Cycle loss</sub> | <sub>32.73/0.9011</sub> |<sub>28.99/0.7917</sub> |<sub>27.85/0.7455</sub> |<sub>27.03/0.8153</sub> |<sub>31.66/0.9196</sub>|
+| <sub>+Add noise</sub> | <sub>0.04998/28.23</sub> | <sub>28.87/0.7889</sub> | <sub>27.77/0.7436</sub> | <sub>26.82/ 0.8087</sub>| <sub>31.22/ 0.9173</sub>|
+|<sub>+Cycle loss</sub> | <sub>32.73/0.9011</sub> |<sub>0.11042/24.48</sub> |<sub>27.85/0.7455</sub> |<sub>27.03/0.8153</sub> |<sub>31.66/0.9196</sub>|
 |<sub>-Perceptual loss</sub> | <sub>32.73/0.9011</sub> |<sub>28.99/0.7917</sub> |<sub>27.85/0.7455</sub> |<sub>27.03/0.8153</sub> |<sub>31.66/0.9196</sub>|
 
 ### **Set5**
