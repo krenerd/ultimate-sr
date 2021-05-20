@@ -131,7 +131,7 @@ def evaluate_with_path(cfg_path, dataset_path, scale=4):
         print('[*] load ckpt from {} at step {}.'.format(
             manager.latest_checkpoint, checkpoint.step.numpy()))
     else:
-        print(f"Checkpoint doesn't exist in {manager.latest_checkpoint}.")
+        print(f"Checkpoint doesn't exist in {checkpoint_dir}.")
 
     cfg_logging={'logging': {'lpips':True, 'psnr':True, 'ssim': True, 'plot_samples': False}}
     dataset = load_valid_dataset(dataset_path, scale, crop_centor=0)
