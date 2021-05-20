@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 import lpips
+import os
 import torch
 import matplotlib.pyplot as plt
 from modules.dataset import load_valid_dataset
@@ -113,6 +114,8 @@ def get_noise_layers(generator, plot_layer_wise=True):
     return noise_feature
 
 def evaluate_with_path(cfg_path, dataset_path, scale=4):
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
     cfg=load_yaml(cfg_path)
     if cfg['network_G']['name']=='RRDB':    # ESRGAN 4x
         model = RRDB_Model(None, cfg['ch_size'], cfg['network_G'])
