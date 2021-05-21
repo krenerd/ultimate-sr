@@ -4,22 +4,19 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-GAN'
-pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE-500K-DIV2K'  # directory to load from at initial training
-cycle_mse: False
-
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-cycleonly-WGANGP'
+pretrain_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-MSE-500K-DIV2K'  # directory to load from at initial training
+cycle_mse: True
 # generator setting
 network_G:
     name: 'RRDB'
     nf: 64
     nb: 23
-    apply_noise: False
+    apply_noise: True
 # discriminator setting
-refGAN: False
 network_D:
     nf: 64
 
-# dataset setting
 train_dataset:
     path: '/content/drive/MyDrive/data/div2k_hr/DIV2K_train_HR'
     num_samples: 32208
@@ -49,13 +46,13 @@ adam_beta2_D: 0.99
 w_pixel: 10
 pixel_criterion: l1
 
-w_feature: 1.0
+w_feature: 0.0      # don't use feature matching loss
 feature_criterion: l1
 
 w_gan: !!float 5e-3
-gan_type: wgan-gp   # gan | ragan | wgan-gp
-gp_weight: 10.0     # only for wgan-gp
-refgan: False       # provide reference image
+gan_type: wgan-gp  # gan | ragan
+gp_weight: 10.0
+refgan: True       # provide reference image
 
 save_steps: 5000
 
