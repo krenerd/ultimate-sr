@@ -24,6 +24,31 @@ def PixelLoss(criterion='l1'):
         raise NotImplementedError(
             'Loss type {} is not recognized.'.format(criterion))
 
+def gradient_penalty(discriminator, real_images, fake_images, lr=None, refgan=True):
+    """ Calculates the gradient penalty.
+
+    This loss is calculated on an interpolated image
+    and added to the discriminator loss.
+    """
+    # Get the interpolated image
+    alpha = tf.random.normal([real_images.shape[0], 1, 1, 1], 0.0, 1.0)
+    diff = fake_images - real_images
+    interpolated = real_images + alpha * diff
+
+    with tf.GradientTape() as gp_tape:
+        gp_tape.watch(interpolated)
+        # 1. Get the discriminator output for this interpolated image.
+        if refgan:
+            pred = discriminator([interpolated, lr], training=True)
+        else: 
+            pred = discriminator(interpolated, training=True)
+
+    # 2. Calculate the gradients w.r.t to this interpolated image.
+    grads = gp_tape.gradient(pred, [interpolated])[0]
+    # 3. Calculate the norm of the gradients.
+    norm = tf.sqrt(tf.reduce_sum(tf.square(grads), axis=[1, 2, 3]))
+    gp = tf.reduce_mean((norm - 1.0) ** 2)
+    return gp
 
 def ContentLoss(criterion='l1', output_layer=54, before_act=True):
     """content loss"""
@@ -62,7 +87,6 @@ def ContentLoss(criterion='l1', output_layer=54, before_act=True):
 
     return content_loss
 
-
 def DiscriminatorLoss(gan_type='ragan'):
     """discriminator loss"""
     cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=False)
@@ -78,10 +102,17 @@ def DiscriminatorLoss(gan_type='ragan'):
         fake_loss = cross_entropy(tf.zeros_like(sr), sigma(sr))
         return real_loss + fake_loss
 
+    def discriminator_loss_wgan(hr, sr):
+        real_loss = tf.reduce_mean(hr)
+        fake_loss = tf.reduce_mean(sr)
+        return fake_loss - real_loss
+
     if gan_type == 'ragan':
         return discriminator_loss_ragan
     elif gan_type == 'gan':
         return discriminator_loss
+    elif gan_type == 'wgan-gp':
+        return lambda (hr, sr):discriminator_loss_wgan(hr, sr) 
     else:
         raise NotImplementedError(
             'Discriminator loss type {} is not recognized.'.format(gan_type))
@@ -100,10 +131,15 @@ def GeneratorLoss(gan_type='ragan'):
     def generator_loss(hr, sr):
         return cross_entropy(tf.ones_like(sr), sigma(sr))
 
+    def generator_loss_wgan(hr, sr):
+        return -tf.reduce_mean(sr)
+
     if gan_type == 'ragan':
         return generator_loss_ragan
     elif gan_type == 'gan':
         return generator_loss
+    elif gan_type == 'wgan-gp':
+        return generator_loss_wgan
     else:
         raise NotImplementedError(
             'Generator loss type {} is not recognized.'.format(gan_type))

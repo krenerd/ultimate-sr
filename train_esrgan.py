@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x, DiscriminatorVGG128
 from modules.lr_scheduler import MultiStepLR
-from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
+from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss, gradient_penalty,
                             GeneratorLoss, PixelLossDown)
 from modules.utils import (load_yaml, load_dataset, ProgressBar,
                            set_memory_growth, load_val_dataset)
@@ -110,6 +110,10 @@ def main(_):
             losses_D = {}
             losses_G['reg'] = tf.reduce_sum(generator.losses)
             losses_D['reg'] = tf.reduce_sum(discriminator.losses)
+            
+            if cfg['w_gan'] > 0.0 and cfg['gan_type']=='wgan-gp':  # add GP loss
+                losses_D['gp'] = gradient_penalty(discriminator, hr, sr, lr, refgan=cfg['refgan']) * cfg['gp_weight']
+
             if cfg['w_pixel'] > 0.0:
                 losses_G['pixel'] = cfg['w_pixel'] * pixel_loss_fn(hr, sr)
             if cfg['w_feature'] > 0.0:

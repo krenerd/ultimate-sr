@@ -23,8 +23,8 @@ train_dataset:
     using_flip: True
     using_rot: True
     detect_blur: False
-    buffer_size: 8192           # min size of buffer
-    patch_per_image: 1024        # number of patches to extract from each image
+    buffer_size: 1024           # min size of buffer
+    patch_per_image: 128        # number of patches to extract from each image
 
 test_dataset:
     set5: './test data/Set5'
