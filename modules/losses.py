@@ -112,7 +112,7 @@ def DiscriminatorLoss(gan_type='ragan'):
     elif gan_type == 'gan':
         return discriminator_loss
     elif gan_type == 'wgan-gp':
-        return lambda (hr, sr):discriminator_loss_wgan(hr, sr) 
+        return discriminator_loss_wgan
     else:
         raise NotImplementedError(
             'Discriminator loss type {} is not recognized.'.format(gan_type))
