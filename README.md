@@ -119,14 +119,14 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 
 ### Pretrained PSNR Network
 
-| <sub>Method</sub> | <sub>  Set5  </sub> | <sub>  Set14  </sub> | <sub>  BSD100  </sub> | <sub>  Urban100  </sub> | <sub>  Manga109  </sub> |
+| <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> | <sub>Manga109</sub> |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| <sub>Baseline PSNR(No blur detection)</sub> | <sub>0.1341 / 30.3603 / **0.8679** </sub> |<sub>**0.2223** / 26.7608 / 0.7525</sub>|<sub>0.2705 / 27.2264 / 0.7461</sub>|<sub>0.1761 / 24.8770 / 0.7764</sub>|<sub>0.0733 / 29.2534 / 0.8945</sub>|
+| <sub>Baseline PSNR</sub> | <sub>0.1341 / 30.3603 / **0.8679** </sub> |<sub>**0.2223** / 26.7608 / 0.7525</sub>|<sub>0.2705 / 27.2264 / 0.7461</sub>|<sub>0.1761 / 24.8770 / 0.7764</sub>|<sub>0.0733 / 29.2534 / 0.8945</sub>|
 | <sub>+Blur detection</sub> | <sub>**0.1327** / **30.4582** / 0.7525</sub> | <sub>0.2229 / **26.8448** / **0.7547**</sub> | <sub>**0.2684** / **27.2545** / **0.7473**</sub> | <sub>**0.1744** / **25.0816** / **0.7821**</sub> | <sub>**0.0711** / **29.5228** / **0.8973**</sub> |
 
 ### ESRGAN
 
-| <sub>Method</sub> | <sub>  Set5  </sub> | <sub>  Set14  </sub> | <sub>  BSD100  </sub> | <sub>  Urban100  </sub> | <sub>  Manga109  </sub> |
+| <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> | <sub>Manga109</sub> |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | <sub>ESRGAN</sub> | <sub>0.0597 / 28.4362 / 0.8145</sub> |<sub>0.1129 / 23.4729 / 0.6276</sub>|<sub>0.1285 / 23.3657 / 0.6108</sub>|<sub>0.1025 / **22.7912** / 0.7058</sub>|<sub>- / - / -</sub>|
 | <sub>+refGAN</sub> | <sub>0.0536 / 27.9871 / 0.8014</sub> | <sub>0.1157 / 24.4505 / 0.6611</sub> | <sub>0.1275 / 24.5896 / 0.6470</sub> | <sub>0.1027 / 23.0496 / 0.7103</sub> | <sub>0.0623 / 26.4068 / 0.8150</sub> |
