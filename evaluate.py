@@ -108,7 +108,7 @@ def get_noise_layers(generator, plot_layer_wise=True):
         except: # if layer is tf.keras.Layer
             if hasattr(layer,'applynoise'):     # if layer has noise layer
                 noise_feature.append(layer.applynoise.weights[0])
-                return
+            return
         
         for sublayer in layer.layers:
             recurse_all_layer(sublayer)
