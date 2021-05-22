@@ -51,33 +51,50 @@ def plot_examples(data_list, plot_size=4):
 
     return plot_to_image(fig)
 
-def evaluate_dataset(dataset, model, cfg):
+def evaluate_dataset(dataset, model, cfg, return_sum=True):
     # evalutaes ever
     sum_LPIPS, sum_PSNR, sum_SSIM = 0, 0, 0
+    list_PSNR, list_SSIM, list_LPIPS = [], [], []
     data_list = []    # save all SR image for plotting
 
     print("Evaluating on test dataset.")
     for lr, hr in tqdm(dataset, position=0, leave=True):
         sr = model(lr[np.newaxis,:], training=False)[0] #Generate SR image
         
-        if cfg['logging']['psnr']:
-            sum_PSNR += evaluate_psnr(sr, hr)
-        if cfg['logging']['ssim']:
-            sum_SSIM += evaluate_ssim(sr, hr)
-        if cfg['logging']['lpips']:
-            sum_LPIPS += evaluate_lpips(sr, hr)
+        if return_sum:
+            if cfg['logging']['psnr']:
+                sum_PSNR += evaluate_psnr(sr, hr)
+            if cfg['logging']['ssim']:
+                sum_SSIM += evaluate_ssim(sr, hr)
+            if cfg['logging']['lpips']:
+                sum_LPIPS += evaluate_lpips(sr, hr)
+        else:
+            if cfg['logging']['psnr']:
+                list_PSNR.append(evaluate_psnr(sr, hr))
+            if cfg['logging']['ssim']:
+                list_SSIM.append(evaluate_ssim(sr, hr))
+            if cfg['logging']['lpips']:
+                list_LPIPS.append(evaluate_lpips(sr,hr))
         
         if cfg['logging']['plot_samples']:
             data_list.append((sr, hr))
 
     num_data = len(dataset)
     logs={}
-    if cfg['logging']['psnr']:
-        logs['psnr'] = sum_PSNR / num_data
-    if cfg['logging']['ssim']:
-        logs['ssim'] = sum_SSIM / num_data
-    if cfg['logging']['lpips']:
-        logs['lpips'] = sum_LPIPS / num_data
+    if return_sum:
+        if cfg['logging']['psnr']:
+            logs['psnr'] = sum_PSNR / num_data
+        if cfg['logging']['ssim']:
+            logs['ssim'] = sum_SSIM / num_data
+        if cfg['logging']['lpips']:
+            logs['lpips'] = sum_LPIPS / num_data
+    else:
+        if cfg['logging']['psnr']:
+            logs['psnr'] = list_PSNR 
+        if cfg['logging']['ssim']:
+            logs['ssim'] = list_SSIM 
+        if cfg['logging']['lpips']:
+            logs['lpips'] = list_LPIPS  
     if cfg['logging']['plot_samples']:
         logs['samples'] = plot_examples(data_list)
 
