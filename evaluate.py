@@ -132,7 +132,7 @@ def get_noise_layers(generator, plot_layer_wise=True):
 
     return noise_feature
 
-def evaluate_with_path(cfg_path, dataset_path, scale=4):
+def evaluate_with_path(cfg_path, dataset_path, scale=4, return_sum=True):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
     cfg=load_yaml(cfg_path)
@@ -158,5 +158,5 @@ def evaluate_with_path(cfg_path, dataset_path, scale=4):
     cfg_logging={'logging': {'lpips':True, 'psnr':True, 'ssim': True, 'plot_samples': False}}
     dataset = load_valid_dataset(dataset_path, scale, crop_centor=0)
 
-    logs = evaluate_dataset(dataset, model, cfg_logging)
+    logs = evaluate_dataset(dataset, model, cfg_logging, return_sum=return_sum)
     return logs
