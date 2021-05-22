@@ -1,4 +1,4 @@
-# Compatible Training Objective for Improving Perceptual Super-Resolution-Tensorflow 2
+# One-to-Many Approach for Improving Perceptual Super-Resolution
 
 Compatible Training Objective for Improving Perceptual Super-Resolution implemented in Tensorflow 2.0+.
 
