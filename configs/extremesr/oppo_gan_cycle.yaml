@@ -38,8 +38,8 @@ test_dataset:
 # training setting
 niter: 400000
 
-lr_G: !!float 1e-4
-lr_D: !!float 1e-4
+lr_G: !!float 2e-5
+lr_D: !!float 2e-5
 lr_steps: [50000, 100000, 200000, 300000]
 lr_rate: 0.5
 
