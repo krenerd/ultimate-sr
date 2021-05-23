@@ -4,9 +4,9 @@ input_size: 32
 gt_size: 512
 ch_size: 3
 scale: 16
-log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-noise-RFB_ESRGAN'
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-cycle-RFB_ESRGAN'
 pretrain_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-ESRGAN-blurdetect'  # directory to load from at initial training
-cycle_mse: False
+cycle_mse: True
 
 # generator setting
 network_G:

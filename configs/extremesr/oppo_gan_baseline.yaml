@@ -4,8 +4,8 @@ input_size: 32
 gt_size: 512
 ch_size: 3
 scale: 16
-log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-noise-RFB_ESRGAN'
-pretrain_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-ESRGAN-blurdetect'  # directory to load from at initial training
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-baseline-RFB_ESRGAN'
+pretrain_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-ESRGAN'  # directory to load from at initial training
 cycle_mse: False
 
 # generator setting
@@ -14,7 +14,7 @@ network_G:
     nf: 64
     nb_rrbd: 16
     nb_rfb: 8
-    apply_noise: True
+    apply_noise: False
 # discriminator setting
 network_D:
     nf: 64
@@ -26,7 +26,7 @@ train_dataset:
     using_bin: True
     using_flip: True
     using_rot: True
-    detect_blur: True
+    detect_blur: False
     buffer_size: 1024           # max size of buffer
     patch_per_image: 128        # number of patches to extract from each image
 test_dataset:
@@ -56,7 +56,7 @@ feature_criterion: l1
 
 w_gan: !!float 5e-3
 gan_type: ragan  # gan | ragan
-refgan: True       # provide reference image
+refgan: False       # provide reference image
 
 save_steps: 5000
 
