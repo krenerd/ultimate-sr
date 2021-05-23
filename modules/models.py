@@ -386,3 +386,58 @@ def DiscriminatorVGG128(size, channels, nf=64, wd=0., scale=4,
         return Model([inputs,ref], out, name=name)
     else:
         return Model(inputs, out, name=name)
+
+def DiscriminatorVGG512(size, channels, nf=64, wd=0., scale=4,
+                        name='Discriminator_VGG_128', refgan=False):
+    """Discriminator VGG 128"""
+    lrelu_f = functools.partial(LeakyReLU, alpha=0.2)
+    conv_k3s1_f = functools.partial(Conv2D,
+                                    kernel_size=3, strides=1, padding='same',
+                                    kernel_initializer=_kernel_init(),
+                                    kernel_regularizer=_regularizer(wd))
+    conv_k3s2_f = functools.partial(Conv2D,
+                                    kernel_size=3, strides=2, padding='same',
+                                    kernel_initializer=_kernel_init(),
+                                    kernel_regularizer=_regularizer(wd))
+    dese_f = functools.partial(Dense, kernel_regularizer=_regularizer(wd))
+
+    x = inputs = Input(shape=(size, size, channels))
+
+    if refgan:
+        ref = Input(shape=(size//scale,size//scale,channels))
+        ref_up = tf.keras.layers.experimental.preprocessing.Resizing(size, size, interpolation='bicubic')(ref)
+        x = tf.keras.layers.concatenate([x, ref_up])
+
+    x = conv_k3s1_f(filters=nf, name='conv0_0')(x)
+    x = lrelu_f()(x)
+
+    x = conv_k3s2_f(filters=nf, use_bias=False, name='conv0_1')(x)
+    x = lrelu_f()(BatchNormalization(name='bn1_0')(x))
+
+    x = conv_k3s1_f(filters=nf * 2, use_bias=False, name='conv1_0')(x)
+    x = lrelu_f()(BatchNormalization(name='bn1_0')(x))
+    x = conv_k3s2_f(filters=nf * 2, use_bias=False, name='conv1_1')(x)
+    x = lrelu_f()(BatchNormalization(name='bn1_1')(x))
+
+    x = conv_k3s1_f(filters=nf * 4, use_bias=False, name='conv2_0')(x)
+    x = lrelu_f()(BatchNormalization(name='bn2_0')(x))
+    x = conv_k3s2_f(filters=nf * 4, use_bias=False, name='conv2_1')(x)
+    x = lrelu_f()(BatchNormalization(name='bn2_1')(x))
+
+    x = conv_k3s1_f(filters=nf * 8, use_bias=False, name='conv3_0')(x)
+    x = lrelu_f()(BatchNormalization(name='bn3_0')(x))
+    x = conv_k3s2_f(filters=nf * 8, use_bias=False, name='conv3_1')(x)
+    x = lrelu_f()(BatchNormalization(name='bn3_1')(x))
+
+    x = conv_k3s1_f(filters=nf * 8, use_bias=False, name='conv4_0')(x)
+    x = lrelu_f()(BatchNormalization(name='bn4_0')(x))
+    x = conv_k3s2_f(filters=nf * 8, use_bias=False, name='conv4_1')(x)
+    x = lrelu_f()(BatchNormalization(name='bn4_1')(x))
+
+    x = Flatten()(x)
+    x = dese_f(units=100, activation=lrelu_f(), name='linear1')(x)
+    out = dese_f(units=1, name='linear2')(x)
+    if refgan:
+        return Model([inputs,ref], out, name=name)
+    else:
+        return Model(inputs, out, name=name)

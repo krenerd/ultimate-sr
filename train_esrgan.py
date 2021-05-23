@@ -3,7 +3,7 @@ from absl.flags import FLAGS
 import os
 import tensorflow as tf
 
-from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x, DiscriminatorVGG128
+from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x, DiscriminatorVGG128, DiscriminatorVGG512
 from modules.lr_scheduler import MultiStepLR
 from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss, gradient_penalty,
                             GeneratorLoss, PixelLossDown)
@@ -35,7 +35,14 @@ def main(_):
     elif cfg['network_G']['name']=='RFB_ESRGAN':
         generator = RFB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
-    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
+
+    if cfg['network_G']['name']=='RRDB':
+        discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
+    elif cfg['network_G']['name']=='RRDB_CIPLAB':
+        pass
+    elif cfg['network_G']['name']=='RFB_ESRGAN':
+        discriminator = DiscriminatorVGG512(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
+
     discriminator.summary(line_length=80)
 
     # load dataset
