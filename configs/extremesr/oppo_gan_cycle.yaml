@@ -1,5 +1,5 @@
 # general setting
-batch_size: 4
+batch_size: 3
 input_size: 32
 gt_size: 512
 ch_size: 3
