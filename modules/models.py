@@ -412,7 +412,7 @@ def DiscriminatorVGG512(size, channels, nf=64, wd=0., scale=4,
     x = lrelu_f()(x)
 
     x = conv_k3s2_f(filters=nf, use_bias=False, name='conv0_1')(x)
-    x = lrelu_f()(BatchNormalization(name='bn1_0')(x))
+    x = lrelu_f()(BatchNormalization(name='bn0_1')(x))
 
     x = conv_k3s1_f(filters=nf * 2, use_bias=False, name='conv1_0')(x)
     x = lrelu_f()(BatchNormalization(name='bn1_0')(x))
