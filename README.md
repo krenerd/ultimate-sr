@@ -1,5 +1,4 @@
 # One-to-Many Approach for Improving Perceptual Super-Resolution :satisfied:
-=======
 
 Official Implementation of **Compatible Training Objective for Improving Perceptual Super-Resolution** in Tensorflow 2.0+.
 
@@ -162,3 +161,4 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 |<sub>-Perceptual loss</sub> | <sub>0.2690 / 23.4608 / 0.6312</sub> |<sub>0.2727 / 22.2703 / 0.5685</sub> |<sub>0.2985 / 24.1648 / 0.5859</sub> |<sub>0.2411 / 20.8169 / 0.6244</sub> |<sub>0.2780 / 21.7002 / 0.6483</sub>|
 
 
+![Comparison of results](./readme/result_comparison.png)
