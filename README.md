@@ -1,4 +1,5 @@
-# Compatible Training Objective for Improving Perceptual Super-Resolution-Tensorflow 2 :satisfied:
+# One-to-Many Approach for Improving Perceptual Super-Resolution :satisfied:
+=======
 
 Compatible Training Objective for Improving Perceptual Super-Resolution implemented in Tensorflow 2.0+.
 
@@ -14,13 +15,16 @@ The methods presented in our paper were implemented with the ESRGAN network from
 
 Paper:     &nbsp; [Arxiv](https://arxiv.org/abs/1809.00219) &nbsp; [ECCV2018](http://openaccess.thecvf.com/content_eccv_2018_workshops/w25/html/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.html)
 
-:: Results from our work. ::
-<img src="photo/baboon_cover.png">
-
 ## Training and Testing
 
-### Config File
-You can modify your own dataset path or other settings of model in [./configs/*.yaml](https://github.com/krenerd/ultimate-sr/tree/master/configs) for training and testing, which like below.
+### Requirements
+
+To install requirements:
+
+pip install -r requirements.txt
+
+### Configuration File
+You can modify the configurations of our models in [./configs/*.yaml](https://github.com/krenerd/ultimate-sr/tree/master/configs) for training and testing, which like below.
 
 ```python
 # general setting
@@ -121,18 +125,19 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 
 | <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> | <sub>Manga109</sub> |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| <sub>PSNR(No blur detection)</sub> | <sub>0.1341/30.3603/**0.8679**</sub> |<sub>**0.2223**/26.7608/0.7525</sub>|<sub>0.2705/27.2264/0.7461</sub>|<sub>0.1761/24.8770/0.7764</sub>|<sub>0.0733/29.2534/0.8945</sub>|
-| <sub>+Blur detection</sub> | <sub>**0.1327**/**30.4582**/0.7525</sub> | <sub>0.2229/**26.8448**/**0.7547**</sub> | <sub>**0.2684**/**27.2545**/**0.7473**</sub> | <sub>**0.1744**/**25.0816**/**0.7821**</sub> | <sub>**0.0711**/**29.5228**/**0.8973**</sub> |
+| <sub>Baseline PSNR</sub> | <sub>0.1341 / 30.3603 / ****0.8679**** </sub> |<sub>****0.2223**** / 26.7608 / 0.7525</sub>|<sub>0.2705 / 27.2264 / 0.7461</sub>|<sub>0.1761 / 24.8770 / 0.7764</sub>|<sub>0.0733 / 29.2534 / 0.8945</sub>|
+| <sub>+Blur detection</sub> | <sub>****0.1327**** / ****30.4582**** / 0.7525</sub> | <sub>0.2229 / ****26.8448**** / ****0.7547****</sub> | <sub>****0.2684**** / ****27.2545**** / **0.7473**</sub> | <sub>****0.1744**** / ****25.0816**** / ****0.7821****</sub> | <sub>****0.0711**** / ****29.5228**** / ****0.8973****</sub> |
 
 ### ESRGAN
 
 | <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> | <sub>Manga109</sub> |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| <sub>ESRGAN</sub> | <sub>0.0538/27.9285/0.7968</sub> |<sub>0.1117/24.5264/0.6602</sub>|<sub>0.1256/24.6554/0.6447</sub>|<sub>0.1026/**23.2829**/0.7137</sub>|<sub>**0.0567**/**26.6808**/0.8186</sub>|
-| <sub>+refGAN</sub> | <sub>0.0536/27.9871/0.8014</sub> | <sub>0.1157/24.4505/0.6611</sub> | <sub>0.1275/24.5896/0.6470</sub> | <sub>0.1027/23.0496/0.7103</sub> | <sub>0.0623/26.4068/0.8150</sub> |
-| <sub>+Add noise</sub> | <sub>**0.04998**/**28.23**/**0.8081**</sub> | <sub>0.1104/24.48/0.6626</sub> | <sub>**0.1209**/**24.8439**/**0.6577**</sub> | <sub>**0.1007**/23.2204/**0.7203**</sub>| <sub>0.0572/26.6227/**0.8260**</sub>|
-|<sub>+Cycle loss</sub> | <sub>0.0524/28.1322/0.8033</sub> |<sub>**0.1082**/**24.5802**/**0.6634**</sub> |<sub>0.1264/24.6180/0.6468</sub> |<sub>0.1015/23.1363/0.7103</sub> |<sub>0.0616/26.3945/0.8151</sub>|
-|<sub>-Perceptual loss</sub> | <sub>0.2690/23.4608/0.6312</sub> |<sub>0.2727/22.2703/0.5685</sub> |<sub>0.2985/20.8169/0.5859</sub> |<sub>0.2411/24.1648/0.6244</sub> |<sub>0.2780/21.7002/0.6483</sub>|
+| <sub>ESRGAN (Official)</sub> | <sub>0.0597 / 28.4362 / 0.8145</sub> |<sub>0.1129 / 23.4729 / 0.6276</sub>|<sub>0.1285 / 23.3657 / 0.6108</sub>|<sub>0.1025 / 22.7912 / 0.7058</sub>|<sub>  -   /   -   /  -  </sub>|
+| <sub>ESRGAN (Baseline)</sub> | <sub> 0.0538 / 27.9285 / 0.7968 </sub> |<sub>0.1117 / 24.5264 / 0.6602</sub>|<sub>0.1256 / 24.6554 / 0.6447</sub>|<sub>0.1026 / **23.2829** / 0.7137</sub>|<sub> **0.0567** / **26.6808** / 0.8186 </sub>|
+| <sub>+refGAN</sub> | <sub>0.0536 / 27.9871 / 0.8014</sub> | <sub>0.1157 / 24.4505 / 0.6611</sub> | <sub>0.1275 / 24.5896 / 0.6470</sub> | <sub>0.1027 / 23.0496 / 0.7103</sub> | <sub>0.0623 / 26.4068 / 0.8150</sub> |
+| <sub>+Add noise</sub> | <sub>**0.04998** / **28.23** / **0.8081**</sub> | <sub>0.1104 / 24.48 / 0.6626</sub> | <sub>**0.1209** / **24.8439** / **0.6577**</sub> | <sub>**0.1007** / 23.2204 / **0.7203**</sub>| <sub>0.0572 / 26.6227 / **0.8260**</sub>|
+|<sub>+Cycle loss</sub> | <sub>0.0524 / 28.1322 / 0.8033</sub> |<sub>**0.1082** / **24.5802** / **0.6634**</sub> |<sub>0.1264 / 24.6180 / 0.6468</sub> |<sub>0.1015 / 23.1363 / 0.7103</sub> |<sub>0.0616 / 26.3945 / 0.8151</sub>|
+|<sub>-Perceptual loss</sub> | <sub>0.2690 / 23.4608 / 0.6312</sub> |<sub>0.2727 / 22.2703 / 0.5685</sub> |<sub>0.2985 / 24.1648 / 0.5859</sub> |<sub>0.2411 / 20.8169 / 0.6244</sub> |<sub>0.2780 / 21.7002 / 0.6483</sub>|
 
 ### **Set5**
 <table>
