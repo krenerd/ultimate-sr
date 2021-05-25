@@ -19,7 +19,13 @@ Paper:     &nbsp; [Arxiv](https://arxiv.org/abs/1809.00219) &nbsp; [ECCV2018](ht
 
 ## Training and Testing
 
-### Config File
+###Requirements
+
+To install requirements:
+
+pip install -r requirements.txt
+
+### Configuration File
 You can modify your own dataset path or other settings of model in [./configs/*.yaml](https://github.com/krenerd/ultimate-sr/tree/master/configs) for training and testing, which like below.
 
 ```python
