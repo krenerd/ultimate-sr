@@ -14,9 +14,6 @@ The methods presented in our paper were implemented with the ESRGAN network from
 
 Paper:     &nbsp; [Arxiv](https://arxiv.org/abs/1809.00219) &nbsp; [ECCV2018](http://openaccess.thecvf.com/content_eccv_2018_workshops/w25/html/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.html)
 
-:: Results from our work. ::
-<img src="photo/baboon_cover.png">
-
 ## Training and Testing
 
 ### Requirements
@@ -26,7 +23,7 @@ To install requirements:
 pip install -r requirements.txt
 
 ### Configuration File
-You can modify your own dataset path or other settings of model in [./configs/*.yaml](https://github.com/krenerd/ultimate-sr/tree/master/configs) for training and testing, which like below.
+You can modify the configurations of our models in [./configs/*.yaml](https://github.com/krenerd/ultimate-sr/tree/master/configs) for training and testing, which like below.
 
 ```python
 # general setting
