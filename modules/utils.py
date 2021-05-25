@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 from absl import logging
 import io
+from modules.resizing import imresize_np
 from modules.dataset import load_tfrecord_dataset, load_valid_dataset
 import matplotlib.pyplot as plt
 

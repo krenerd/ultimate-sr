@@ -3,9 +3,9 @@ from absl.flags import FLAGS
 import os
 import tensorflow as tf
 
-from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x, DiscriminatorVGG128
+from modules.models import RRDB_Model, RRDB_Model_16x, RFB_Model_16x, DiscriminatorVGG128, DiscriminatorVGG512
 from modules.lr_scheduler import MultiStepLR
-from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss,
+from modules.losses import (PixelLoss, ContentLoss, DiscriminatorLoss, gradient_penalty,
                             GeneratorLoss, PixelLossDown)
 from modules.utils import (load_yaml, load_dataset, ProgressBar,
                            set_memory_growth, load_val_dataset)
@@ -35,13 +35,23 @@ def main(_):
     elif cfg['network_G']['name']=='RFB_ESRGAN':
         generator = RFB_Model_16x(None, cfg['ch_size'], cfg['network_G'])
     generator.summary(line_length=80)
-    discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
+
+    if cfg['network_G']['name']=='RRDB':
+        discriminator = DiscriminatorVGG128(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
+    elif cfg['network_G']['name']=='RRDB_CIPLAB':
+        pass
+    elif cfg['network_G']['name']=='RFB_ESRGAN':
+        discriminator = DiscriminatorVGG512(cfg['gt_size'], cfg['ch_size'], scale=cfg['scale'], refgan=cfg['refgan'])
+
     discriminator.summary(line_length=80)
 
     # load dataset
     train_dataset = load_dataset(cfg, 'train_dataset', shuffle=False)
     set5_dataset = load_val_dataset(cfg, 'set5')
     set14_dataset = load_val_dataset(cfg, 'set14')
+    if 'DIV8K' in cfg['test_dataset']:
+        print('[*] Loading test dataset.')
+        DIV8K_val = load_val_dataset(cfg, 'DIV8K', crop_centor=cfg['test_dataset']['DIV8K_crop_centor'])
 
     # define optimizer
     learning_rate_G = MultiStepLR(cfg['lr_G'], cfg['lr_steps'], cfg['lr_rate'])
@@ -107,6 +117,10 @@ def main(_):
             losses_D = {}
             losses_G['reg'] = tf.reduce_sum(generator.losses)
             losses_D['reg'] = tf.reduce_sum(discriminator.losses)
+            
+            if cfg['w_gan'] > 0.0 and cfg['gan_type']=='wgan-gp':  # add GP loss
+                losses_D['gp'] = gradient_penalty(discriminator, hr, sr, lr, refgan=cfg['refgan']) * cfg['gp_weight']
+
             if cfg['w_pixel'] > 0.0:
                 losses_G['pixel'] = cfg['w_pixel'] * pixel_loss_fn(hr, sr)
             if cfg['w_feature'] > 0.0:
@@ -171,24 +185,34 @@ def main(_):
             # log results on test data
             set5_logs = evaluate_dataset(set5_dataset, generator, cfg)
             set14_logs = evaluate_dataset(set14_dataset, generator, cfg)
+            if 'DIV8K' in cfg['test_dataset']:
+                DIV8K_logs = evaluate_dataset(DIV8K_val, generator, cfg)
 
             with summary_writer.as_default():
                 if cfg['logging']['psnr']:
                     tf.summary.scalar('set5/psnr', set5_logs['psnr'], step=steps)
                     tf.summary.scalar('set14/psnr', set14_logs['psnr'], step=steps)
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
 
                 if cfg['logging']['ssim']:
                     tf.summary.scalar('set5/ssim', set5_logs['ssim'], step=steps)
                     tf.summary.scalar('set14/ssim', set14_logs['ssim'], step=steps)
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/psnr', DIV8K_logs['psnr'], step=steps)
 
                 if cfg['logging']['lpips']:
                     tf.summary.scalar('set5/lpips', set5_logs['lpips'], step=steps)
                     tf.summary.scalar('set14/lpips', set14_logs['lpips'], step=steps)
-                
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.scalar('DIV8K/lpips', DIV8K_logs['lpips'], step=steps)
+
                 if cfg['logging']['plot_samples']:
                     tf.summary.image("set5/samples", [set5_logs['samples']], step=steps)
                     tf.summary.image("set14/samples", [set14_logs['samples']], step=steps)
-
+                    if 'DIV8K' in cfg['test_dataset']:
+                        tf.summary.image("DIV8K/samples", [DIV8K_logs['samples']], step=steps)
+                        
     print("\n [*] training done!")
 
 

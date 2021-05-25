@@ -1,0 +1,53 @@
+# general setting
+batch_size: 2
+input_size: 24
+gt_size: 384
+ch_size: 3
+scale: 16
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ExtremeSR-MSE-ESRGAN'
+pretrain_name: null
+cycle_mse: False
+# generator setting
+network_G:
+    name: 'RRDB_CIPLAB'
+    nf: 64
+    nb: 23
+    apply_noise: False
+
+# dataset setting
+train_dataset:
+    path: '/content/drive/MyDrive/data/DIV8K'
+    num_samples: 32208
+    using_bin: True
+    using_flip: True
+    using_rot: True
+    detect_blur: True
+    buffer_size: 4096           # min size of buffer
+    patch_per_image: 1024        # number of patches to extract from each image
+
+test_dataset:
+    set5: './test data/Set5'
+    set14: './test data/Set14'
+    DIV8K: '/content/drive/MyDrive/data/DIV8K_val_cropped'
+    DIV8K_crop_centor: 0     # crop center 1008 pixels (1008 % 16==0)
+
+# training setting
+niter: 100000
+lr: !!float 2e-4
+lr_steps: [200000, 400000]
+lr_rate: 0.5
+
+adam_beta1_G: 0.9
+adam_beta2_G: 0.99
+
+w_pixel: 1.0
+pixel_criterion: l1
+
+save_steps: 5000
+
+# logging settings
+logging:
+    psnr: True
+    lpips: True
+    ssim: True
+    plot_samples: True

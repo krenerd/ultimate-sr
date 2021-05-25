@@ -4,7 +4,7 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-cyclemixing'
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-cyclemixing'
 pretrain_dir: '/content/drive/MyDrive/ESRGAN-MSE-500K-DIV2K'  # directory to load from at initial training
 cycle_mse: True
 # generator setting
@@ -44,7 +44,7 @@ adam_beta2_G: 0.99
 adam_beta1_D: 0.9
 adam_beta2_D: 0.99
 
-w_pixel: !!float 1e-2
+w_pixel: 10
 pixel_criterion: l1
 
 w_feature: 1.0

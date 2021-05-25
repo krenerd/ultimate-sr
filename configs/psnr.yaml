@@ -4,7 +4,7 @@ input_size: 32
 gt_size: 128
 ch_size: 3
 scale: 4
-log_dir: '/content/drive/MyDrive/ESRGAN-MSE'
+log_dir: '/content/drive/MyDrive/logs/Ultimate-SR/ESRGAN-MSE-500K-DIV2K'
 pretrain_name: null
 cycle_mse: False
 # generator setting
