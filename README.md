@@ -5,6 +5,8 @@ Official Implementation of **Compatible Training Objective for Improving Percept
 
 This repository contains the implementation and training of the methods proposed in the paper Compatible Training Objective for Improving Perceptual Super-Resolution.(Link)
 
+![Diagram of our method](./readme/diagram.png)
+
 The methods presented in our paper were implemented with the ESRGAN network from ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks by Xintao Wang et al. In our work we propose the following:
 
 * We provide weigthed random noise to the generator to provide it with the ability to generate diverse outputs.
@@ -14,8 +16,6 @@ The methods presented in our paper were implemented with the ESRGAN network from
 
 
 Paper:     &nbsp; [Arxiv](https://arxiv.org/abs/1809.00219) &nbsp; [ECCV2018](http://openaccess.thecvf.com/content_eccv_2018_workshops/w25/html/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.html)
-
-![Image of Yaktocat](./readme/diagram.png)
 
 ## Training and Testing
 
@@ -99,16 +99,23 @@ logging:
 
 `cycle_mse`: use cycle-consistent content loss
 
-`apply_noise`: provide random noise to the generator network
+`network_G/apply_noise`: provide random noise to the generator network
 
-`detect_blur`: filter blurry images in the training dataset
+`train_dataset/detect_blur`: filter blurry images in the training dataset
 
 `refgan`: provide reference image to the discriminator network
 
+Explanation of *config* files:
+- `esrgan.yaml`: baseline ESRGAN (configuration(c))
+- `esrrefgan.yaml`: +refgan (configuration(d))
+- `use_noise.yaml`: +use noise (configuration(e))
+- `cyclegan.yaml`: +cycle loss (configuration(f))
+- `cyclegan_only.yaml`: -perceptual loss (configuration(g))
 
 ### Training
 The training process is divided into two parts;
-pretraining the PSNR RRDB model, and training the ESRGAN model with the pretrained PSNR model.
+pretraining the model with pixel-wise loss, and training the pretrained PSNR model with ESRGAN loss.
+
 #### Pretrain PSNR
 Pretrain the PSNR RDDB model.
 ```bash
@@ -118,8 +125,19 @@ python train_psnr.py --cfg_path="./configs/psnr.yaml" --gpu=0
 #### ESRGAN
 Train the ESRGAN model with the pretrain PSNR model.
 ```bash
-python train_esrgan.py --cfg_path="./configs/esrgan_*.yaml" --gpu=0
+python train_esrgan.py --cfg_path="./configs/esrgan.yaml" --gpu=0
 ```
+Configure the dataset directory and log directory in the config file before training. The DIV2K dataset is available [here](https://drive.google.com/drive/folders/1jgvj8oBpYBwK6S2xe2gX9LF50r5a2pYX?usp=sharing) and the DIV8K dataset is avilable [here](https://drive.google.com/drive/folders/1WuwWfc0X5ORF3zT7Z-5Soisbpyh-LDy_?usp=sharing).
+
+## Evaluation
+
+```
+python test.py --model=weights/ESRGAN-cyclemixing --gpu=0 --img_path=photo/baby.png --down_up=True --scale=4(optional)
+```
+When the `down_up` option is `True`, the image will be arbitrarily downsampled and processed through the network. For real use cases, the option must be marked `False` for the model to upsample the image.  
+## Pre-trained models and logs
+
+All our trained models and `tensorboard` logs in the experiment can be downloaded [here](https://drive.google.com/drive/folders/1AmsOyI1hf0jJBY1WvZJIaj1aDobfXM-G?usp=sharing). Three trained models are included in the repository in `./weights/*`.
 
 ## Results
 
@@ -132,7 +150,7 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 | <sub>Baseline PSNR</sub> | <sub>0.1341 / 30.3603 / ****0.8679**** </sub> |<sub>****0.2223**** / 26.7608 / 0.7525</sub>|<sub>0.2705 / 27.2264 / 0.7461</sub>|<sub>0.1761 / 24.8770 / 0.7764</sub>|<sub>0.0733 / 29.2534 / 0.8945</sub>|
 | <sub>+Blur detection</sub> | <sub>****0.1327**** / ****30.4582**** / 0.7525</sub> | <sub>0.2229 / ****26.8448**** / ****0.7547****</sub> | <sub>****0.2684**** / ****27.2545**** / **0.7473**</sub> | <sub>****0.1744**** / ****25.0816**** / ****0.7821****</sub> | <sub>****0.0711**** / ****29.5228**** / ****0.8973****</sub> |
 
-### ESRGAN
+### X4 super-resolution
 
 | <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> | <sub>Manga109</sub> |
 |:---:|:---:|:---:|:---:|:---:|:---:|
@@ -143,129 +161,4 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 |<sub>+Cycle loss</sub> | <sub>0.0524 / 28.1322 / 0.8033</sub> |<sub>**0.1082** / **24.5802** / **0.6634**</sub> |<sub>0.1264 / 24.6180 / 0.6468</sub> |<sub>0.1015 / 23.1363 / 0.7103</sub> |<sub>0.0616 / 26.3945 / 0.8151</sub>|
 |<sub>-Perceptual loss</sub> | <sub>0.2690 / 23.4608 / 0.6312</sub> |<sub>0.2727 / 22.2703 / 0.5685</sub> |<sub>0.2985 / 24.1648 / 0.5859</sub> |<sub>0.2411 / 20.8169 / 0.6244</sub> |<sub>0.2780 / 21.7002 / 0.6483</sub>|
 
-### **Set5**
-<table>
-    <thead>
-        <tr>
-            <th>Image Name</th>
-            <th>Bicubic</th>
-            <th>ESRGAN</th>
-            <th>Our Methods</th>
-            <th>Ground Truth</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td align="center" rowspan=2>baby</td>
-            <td align="center" colspan=4><img src="./photo/table_baby.png"></td>
-        </tr>
-            <td align="center">31.96 / 0.85</td>
-            <td align="center">33.86 / 0.89</td>
-            <td align="center">31.36 / 0.83</td>
-            <td align="center">-</td>
-        <tr>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>bird</td>
-            <td align="center" colspan=4><img src="./photo/table_bird.png"></td>
-        </tr>
-            <td align="center">30.27 / 0.87</td>
-            <td align="center">35.00 / 0.94</td>
-            <td align="center">32.22 / 0.90</td>
-            <td align="center">-</td>
-        <tr>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>butterfly</td>
-            <td align="center" colspan=4><img src="./photo/table_butterfly.png"></td>
-        </tr>
-            <td align="center">22.25 / 0.72</td>
-            <td align="center">28.56 / 0.92</td>
-            <td align="center">26.66 / 0.88</td>
-            <td align="center">-</td>
-        <tr>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>head</td>
-            <td align="center" colspan=4><img src="./photo/table_head.png"></td>
-        </tr>
-            <td align="center">32.01 / 0.76</td>
-            <td align="center">33.18 / 0.80</td>
-            <td align="center">30.19 / 0.70</td>
-            <td align="center">-</td>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>woman</td>
-            <td align="center" colspan=4><img src="./photo/table_woman.png"></td>
-        </tr>
-            <td align="center">26.44 / 0.83</td>
-            <td align="center">30.42 / 0.92</td>
-            <td align="center">28.50 / 0.88</td>
-            <td align="center">-</td>
-        </tr>
-    </tbody>
-</table>
-
-### **Set14 (Partial)**
-<table>
-    <thead>
-        <tr>
-            <th>Image Name</th>
-            <th>Bicubic</th>
-            <th>ESRGAN</th>
-            <th>Our Methods</th>
-            <th>Ground Truth</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td align="center" rowspan=2>baboon</td>
-            <td align="center" colspan=4><img src="./photo/table_baboon.png"></td>
-        </tr>
-            <td align="center">22.06 / 0.45</td>
-            <td align="center">22.77 / 0.54</td>
-            <td align="center">20.73 / 0.44</td>
-            <td align="center">-</td>
-        <tr>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>comic</td>
-            <td align="center" colspan=4><img src="./photo/table_comic.png"></td>
-        </tr>
-            <td align="center">21.69 / 0.59</td>
-            <td align="center">23.46 / 0.74</td>
-            <td align="center">21.08 / 0.64</td>
-            <td align="center">-</td>
-        <tr>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>lenna</td>
-            <td align="center" colspan=4><img src="./photo/table_lenna.png"></td>
-        </tr>
-            <td align="center">29.67 / 0.80</td>
-            <td align="center">32.06 / 0.85</td>
-            <td align="center">28.96 / 0.80</td>
-            <td align="center">-</td>
-        <tr>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>monarch</td>
-            <td align="center" colspan=4><img src="./photo/table_monarch.png"></td>
-        </tr>
-            <td align="center">27.60 / 0.88</td>
-            <td align="center">33.27 / 0.94</td>
-            <td align="center">31.49 / 0.92</td>
-            <td align="center">-</td>
-        </tr>
-        <tr>
-            <td align="center" rowspan=2>zebra</td>
-            <td align="center" colspan=4><img src="./photo/table_zebra.png"></td>
-        </tr>
-            <td align="center">24.15 / 0.68</td>
-            <td align="center">27.29 / 0.78</td>
-            <td align="center">24.86 / 0.67</td>
-            <td align="center">-</td>
-        </tr>
-    </tbody>
-</table>
 
