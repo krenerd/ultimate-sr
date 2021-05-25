@@ -1,6 +1,6 @@
 # Compatible Training Objective for Improving Perceptual Super-Resolution-Tensorflow 2
 
-Compatible Training Objective for Improving Perceptual Super-Resolution implemented in Tensorflow 2.0+.
+Compatible Training Objective for Improving Perceptual Super-Resolution implemented in Tensorflow 2.0+. :satisfied:
 
 This repository contains the implementation and training of the methods proposed in the paper Compatible Training Objective for Improving Perceptual Super-Resolution.(Link)
 
