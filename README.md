@@ -1,7 +1,7 @@
 # One-to-Many Approach for Improving Perceptual Super-Resolution :satisfied:
 =======
 
-Compatible Training Objective for Improving Perceptual Super-Resolution implemented in Tensorflow 2.0+.
+Official Implementation of **Compatible Training Objective for Improving Perceptual Super-Resolution** in Tensorflow 2.0+.
 
 This repository contains the implementation and training of the methods proposed in the paper Compatible Training Objective for Improving Perceptual Super-Resolution.(Link)
 
@@ -15,13 +15,17 @@ The methods presented in our paper were implemented with the ESRGAN network from
 
 Paper:     &nbsp; [Arxiv](https://arxiv.org/abs/1809.00219) &nbsp; [ECCV2018](http://openaccess.thecvf.com/content_eccv_2018_workshops/w25/html/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.html)
 
+![Image of Yaktocat](./readme/diagram.png)
+
 ## Training and Testing
 
 ### Requirements
 
 To install requirements:
 
+```setup
 pip install -r requirements.txt
+```
 
 ### Configuration File
 You can modify the configurations of our models in [./configs/*.yaml](https://github.com/krenerd/ultimate-sr/tree/master/configs) for training and testing, which like below.
