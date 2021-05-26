@@ -14,8 +14,6 @@ The methods presented in our paper were implemented with the ESRGAN network from
 * We additionally provide the LR image to the discriminator as a reference image to give better gradient feedback to the generator.
 
 
-Paper:     &nbsp; [Arxiv](https://arxiv.org/abs/1809.00219) &nbsp; [ECCV2018](http://openaccess.thecvf.com/content_eccv_2018_workshops/w25/html/Wang_ESRGAN_Enhanced_Super-Resolution_Generative_Adversarial_Networks_ECCVW_2018_paper.html)
-
 ## Training and Testing
 
 ### Requirements
