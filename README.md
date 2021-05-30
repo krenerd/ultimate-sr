@@ -143,14 +143,14 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 ### Pretrained PSNR Network
 
 | <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> |
-|:---:|:---:|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|:---:|
 | <sub>Baseline PSNR</sub> | <sub>0.1341 / 30.3603 / ****0.8679**** </sub> |<sub>****0.2223**** / 26.7608 / 0.7525</sub>|<sub>0.2705 / 27.2264 / 0.7461</sub>|<sub>0.1761 / 24.8770 / 0.7764</sub>|
 | <sub>+Blur detection</sub> | <sub>****0.1327**** / ****30.4582**** / 0.7525</sub> | <sub>0.2229 / ****26.8448**** / ****0.7547****</sub> | <sub>****0.2684**** / ****27.2545**** / **0.7473**</sub> | <sub>****0.1744**** / ****25.0816**** / ****0.7821****</sub> |
 
 ### X4 super-resolution
 
 | <sub>Method</sub> | <sub>Set5</sub> | <sub>Set14</sub> | <sub>BSD100</sub> | <sub>Urban100</sub> |
-|:---:|:---:|:---:|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|:---:|
 | <sub>ESRGAN (Official)</sub> | <sub>0.0597 / 28.4362 / 0.8145</sub> |<sub>0.1129 / 23.4729 / 0.6276</sub>|<sub>0.1285 / 23.3657 / 0.6108</sub>|<sub>0.1025 / 22.7912 / 0.7058</sub>|
 | <sub>ESRGAN (Baseline)</sub> | <sub> 0.0538 / 27.9285 / 0.7968 </sub> |<sub>0.1117 / 24.5264 / 0.6602</sub>|<sub>0.1256 / 24.6554 / 0.6447</sub>|<sub>0.1026 / **23.2829** / 0.7137</sub>|
 | <sub>+refGAN</sub> | <sub>0.0536 / 27.9871 / 0.8014</sub> | <sub>0.1157 / 24.4505 / 0.6611</sub> | <sub>0.1275 / 24.5896 / 0.6470</sub> | <sub>0.1027 / 23.0496 / 0.7103</sub> |
