@@ -160,3 +160,4 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 
 
 ![Comparison of results](./readme/result_comparison.png)
+* Our work was made upon [this](https://github.com/peteryuX/esrgan-tf2) Tensorflow 2.x implementation of ESRGAN. Specail thanks to the creators of the repository.
