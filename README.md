@@ -134,7 +134,7 @@ python test.py --model=weights/ESRGAN-cyclemixing --gpu=0 --img_path=photo/baby.
 When the `down_up` option is `True`, the image will be arbitrarily downsampled and processed through the network. For real use cases, the option must be marked `False` for the model to upsample the image.  
 ## Pre-trained models and logs
 
-All our trained models and `tensorboard` logs in the experiment can be downloaded [here](https://drive.google.com/drive/folders/1AmsOyI1hf0jJBY1WvZJIaj1aDobfXM-G?usp=sharing). Three trained models are included in the repository in `./weights/*`.
+All our training checkpoints and `tensorboard` logs in the experiment can be downloaded [here](https://drive.google.com/drive/folders/1AmsOyI1hf0jJBY1WvZJIaj1aDobfXM-G?usp=sharing). Model `.tb` files can be downloded [here](https://drive.google.com/drive/folders/13WOQc15styMJNfTAmoKASlub5Yd5vebj?usp=sharing), and four trained models are included in the repository in `./weights/*`.
 
 ## Results
 
