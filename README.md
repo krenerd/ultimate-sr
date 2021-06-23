@@ -158,6 +158,18 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 |<sub>+Cycle loss</sub> | <sub>0.0524 / 28.1322 / 0.8033</sub> |<sub>**0.1082** / **24.5802** / **0.6634**</sub> |<sub>0.1264 / 24.6180 / 0.6468</sub> |<sub>0.1015 / 23.1363 / 0.7103</sub> |
 |<sub>-Perceptual loss</sub> | <sub>0.2690 / 23.4608 / 0.6312</sub> |<sub>0.2727 / 22.2703 / 0.5685</sub> |<sub>0.2985 / 24.1648 / 0.5859</sub> |<sub>0.2411 / 20.8169 / 0.6244</sub> |
 
+### X16 super-resolution
+| <sub>Method</sub> | <sub>DIV8K validation (LPIPS / PSNR)</sub> |
+|:---:|:---:|
+| Pretrained | 0.4664 / 30.3603 | 
+| +Blur detection | 0.4603 / 25.53 |
+|:---:|:---:|
+| RFB-ESRGAN(official) | 0.345 / 24.03 |
+|:---:|:---:|
+| Baseline RFB-ESRGAN | 0.356 / 24.78 |
+| Ours w/o cycle-loss | **0.321** / 23.95 |
+| Ours w/ cycle-loss | 0.323 / 23.49 |
+
 
 ![Comparison of results](./readme/result_comparison.png)
 * Our work was made upon [this](https://github.com/peteryuX/esrgan-tf2) Tensorflow 2.x implementation of ESRGAN. Specail thanks to the creators of the repository.
