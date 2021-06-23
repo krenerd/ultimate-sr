@@ -6,7 +6,7 @@ This repository contains the implementation and training of the methods proposed
 
 ![Diagram of our method](./readme/diagram.png)
 
-The methods presented in our paper were implemented with the ESRGAN network from ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks by Xintao Wang et al. In our work we propose the following:
+The methods presented in our [paper](https://arxiv.org/pdf/2106.10437.pdf) were implemented with the ESRGAN network from ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks by Xintao Wang et al. In our work we propose the following:
 
 * We provide weigthed random noise to the generator to provide it with the ability to generate diverse outputs.
 * We propose a weaker content loss that is compatible with the multiple outputs of the generator, and does not contradict the adversarial loss.
