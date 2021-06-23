@@ -163,9 +163,7 @@ Our methods were evaluated on LPIPS, PSNR, and SSIM using the Set5, Set14, BSD10
 |:---:|:---:|
 | Pretrained | 0.4664 / 30.3603 | 
 | +Blur detection | 0.4603 / 25.53 |
-|:---:|:---:|
 | RFB-ESRGAN(official) | 0.345 / 24.03 |
-|:---:|:---:|
 | Baseline RFB-ESRGAN | 0.356 / 24.78 |
 | Ours w/o cycle-loss | **0.321** / 23.95 |
 | Ours w/ cycle-loss | 0.323 / 23.49 |
