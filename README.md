@@ -1,6 +1,6 @@
 # One-to-Many Approach for Improving Perceptual Super-Resolution :satisfied:  [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/one-to-many-approach-for-improving-super/image-super-resolution-on-div8k-val-16x)](https://paperswithcode.com/sota/image-super-resolution-on-div8k-val-16x?p=one-to-many-approach-for-improving-super)
 
-Official Implementation of **Compatible Training Objective for Improving Perceptual Super-Resolution** in Tensorflow 2.0+. 
+Official Implementation of **One-to-Many Approach for Improving Perceptual Super-Resolution** in Tensorflow 2.0+. 
 
 This repository contains the implementation and training of the methods proposed in the paper Compatible Training Objective for Improving Perceptual Super-Resolution.[| Paper |](https://arxiv.org/pdf/2106.10437.pdf)
 
